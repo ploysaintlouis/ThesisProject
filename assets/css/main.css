@@ -1,0 +1,11 @@
+td{
+    padding:0px 0px 0px 3px;
+    height:24px;
+    vertical-align:middle;
+    font-size:13px;
+    word-wrap: break-word;
+}
+
+.tableResult thead th {
+   text-align: center;
+}
