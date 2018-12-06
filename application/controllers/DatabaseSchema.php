@@ -418,7 +418,7 @@ class DatabaseSchema extends CI_Controller{
 	private function openView($data, $page){
 		if('search' == $page){
 			$data['html'] = 'DatabaseSchemaManagement/databaseSchemaSearch_view';
-			$data['projectCombo'] = $this->mProject->searchActiveProjectCombobox();
+			$data['projectCombo'] = $this->mProject->searchStartProjectCombobox();
 		}else{
 			$data['html'] = 'DatabaseSchemaManagement/databaseSchemaUpload_view';
 		}

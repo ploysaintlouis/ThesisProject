@@ -17,19 +17,17 @@
              		<h3 class="box-title">Search Criteria</h3>
             	</div>
 	            <form role="form" action="<?php echo base_url() ?>index.php/FunctionalRequirement/search/" method="post">
-					<input type="hidden" id="selectedProjectId" value="<?php echo $projectId; ?>">
-
 	            	<input type="hidden" id="selectedProjectId" value="<?php echo isset($selectedProjectId)? $selectedProjectId : '' ?>">
 	            	<div class="box-body">
 	            		<div class="row">
 	            			<div class="col-sm-12">
 	            				<div class="form-group">
 	            					<label for="inputProjectName">Project's name<span style="color:red;">*</span>:</label>
-	            					<select id="projectCombo" name="inputProjectName" class="form-control select2" style="width: 100%;" value="<?php echo $projectId ?>">
+	            					<select name="inputProjectName" class="form-control select2" style="width: 100%;" value="<?php echo $formData->projectId ?>">
 										<option value="">--Please Select--</option>
 										<?php if(null != $projectCombo) {  ?>
 										<?php foreach($projectCombo as $value): ?>
-											<option value="<?php echo $value['projectId']; ?>" <?php echo set_select('inputProjectName', $value['projectId'], (!empty($projectId) && $projectId == $value['projectId']? TRUE : FALSE )); ?>>
+											<option value="<?php echo $value['projectId']; ?>" <?php echo set_select('inputProjectName', $value['projectId'], (!empty($formData->projectId) && $formData->projectId == $value['projectId']? TRUE : FALSE )); ?>>
 													<?php echo $value['projectNameAlias']; ?>: <?php echo $value['projectName']; ?>
 											</option>
 										<?php endforeach; ?>

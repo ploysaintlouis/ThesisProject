@@ -14,11 +14,11 @@ class FunctionalRequirement extends CI_Controller {
 	}
 
 	public function index(){
-		$formObj = (object) array('projectName' => '');
+	//	$formObj = (object) array('projectName' => '');
 		$data['error_message'] = '';
 		$data['searchFlag'] = '';
 		//$data['formData'] = $formObj;
-		$data['projectCombo'] = $this->Project->searchStartProjectCombobox();
+	//	$data['projectCombo'] = $this->Project->searchStartProjectCombobox();
 
 		$data['result'] = null;
 		$this->openView($data, 'search');
@@ -43,7 +43,7 @@ class FunctionalRequirement extends CI_Controller {
 			$data['searchFlag'] = 'Y';
 		}
 
-		$formObj = (object) array('projectName' => $projectId);
+		$formObj = (object) array('projectId' => $projectId);
 		$data['formData'] = $formObj;
 		$data['error_message'] = $error_message;
 		$data['result'] = $result;
@@ -313,7 +313,7 @@ class FunctionalRequirement extends CI_Controller {
 	private function openView($data, $page){
 		if('search' == $page){
 			$data['html'] = 'FunctionalRequirementManagement/requirementSearch_view';
-			$data['projectCombo'] = $this->Project->searchActiveProjectCombobox();
+			$data['projectCombo'] = $this->Project->searchStartProjectCombobox();
 		}else{
 			$data['html'] = 'FunctionalRequirementManagement/requirementUpload_view';
 		}

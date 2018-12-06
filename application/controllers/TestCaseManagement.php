@@ -264,7 +264,7 @@ class TestCaseManagement extends CI_Controller{
 	private function openView($data, $page){
 		if('search' == $page){
 			$data['html'] = 'TestCaseManagement/testCaseSearch_view';
-			$data['projectCombo'] = $this->mProject->searchActiveProjectCombobox();
+			$data['projectCombo'] = $this->mProject->searchStartProjectCombobox();
 		}else{
 			$data['html'] = 'TestCaseManagement/testCaseUpload_view';
 		}
