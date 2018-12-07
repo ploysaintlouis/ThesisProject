@@ -41,7 +41,7 @@ class FunctionalRequirement_model extends CI_Model {
 		$queryStr = "SELECT 
 				FRH.functionId, 
 				FRH.functionNo, 
-				CAST(FRH.functionDescription AS VARBINARY(MAX)) as fnDesc, 
+				CAST(FRH.functionDescription AS VARCHAR(50)) as fnDesc, 
 				FRV.functionVersionNumber as functionVersion, 
 				FRV.activeFlag as functionStatus,
 				CONVERT(nvarchar, FRV.effectiveStartDate , 120) as effectiveStartDate
