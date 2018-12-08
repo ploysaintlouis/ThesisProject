@@ -12,7 +12,7 @@ class CSVReader {
 	 	//$keys_values = explode(',', );
 	 	
 	 	$content = array();
-
+		echo $content;
 	 	$keys = $this->escape_string($this->fields);
 	 	
 	 	$i = 0;

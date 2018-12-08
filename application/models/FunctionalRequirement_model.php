@@ -24,6 +24,20 @@ class FunctionalRequirement_model extends CI_Model {
 		}
 		
 		$where_clause = implode(' AND ', $where);
+/*		$queryStr = "SELECT 
+				FRH.functionId, 
+				FRH.functionNo, 
+				CAST(FRH.functionDescription AS VARBINARY(MAX)) as fnDesc, 
+				FRV.functionVersionNumber as functionVersion, 
+				FRV.activeFlag as functionStatus,
+				CONVERT(nvarchar, FRV.effectiveStartDate , 120) as effectiveStartDate
+			FROM M_FN_REQ_HEADER FRH 
+			INNER JOIN M_FN_REQ_VERSION FRV 
+			ON FRH.functionId = FRV.functionId 
+			WHERE $where_clause 
+			ORDER BY FRH.functionNo, FRV.functionVersionNumber";
+
+			*/
 		$queryStr = "SELECT 
 				FRH.functionId, 
 				FRH.functionNo, 

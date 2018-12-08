@@ -93,6 +93,7 @@ class DatabaseSchema extends CI_Controller{
 
 		if($this->upload->do_upload('fileName') == FALSE){
 			$errorMessage = ER_MSG_008;
+			
 		}else{
 			$data = array('upload_data' => $this->upload->data());
 			$fullPath = $data['upload_data']['full_path'];
@@ -108,8 +109,10 @@ class DatabaseSchema extends CI_Controller{
 
 
            		if($this->validate($result, $uploadResult, $correctRecord, $projectId)){
+					
            			$user = (null != $this->session->userdata('username'))? $this->session->userdata('username'): 'userDefault';
            			//Prepare data for uploading
+					
            			foreach ($result as $value) {
            				$databaseSchemaList[] = (object) array(
     	       				'tableName' => strtoupper($value[KEY_DB_TABLE_NAME]),

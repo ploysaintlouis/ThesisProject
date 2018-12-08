@@ -16,7 +16,7 @@ class DatabaseSchema_model extends CI_Model{
 			$where[] = "dv.activeFlag = '".$dbSchemaStatus."'";
 		
 		$where_clause = implode(' AND ', $where);
-
+/*
 		$sqlStr = "SELECT 
 				di.tableName,
 				di.columnName,
@@ -32,6 +32,21 @@ class DatabaseSchema_model extends CI_Model{
 			LEFT JOIN M_USERS u
 			ON dv.createUser = u.username
 			WHERE $where_clause
+			ORDER BY di.tableName, di.columnName, dv.schemaVersionNumber";
+*/
+		$sqlStr = "SELECT 
+				di.tableName,
+				di.columnName,
+				dv.schemaVersionNumber,
+				CONVERT(nvarchar, dv.effectiveStartDate, 103) as effectiveStartDate,
+				COALESCE(CONVERT(nvarchar, dv.effectiveEndDate, 103), '-') as effectiveEndDate,
+				dv.activeFlag,
+				CONVERT(nvarchar, dv.createDate, 120) as createDate,
+				CONCAT(u.firstname, ' ', u.lastname) as createUser
+			FROM M_DATABASE_SCHEMA_INFO di , M_DATABASE_SCHEMA_VERSION dv,M_USERS u
+			WHERE $where_clause
+			AND dv.projectid = di.projectid
+			AND dv.createUser = u.username
 			ORDER BY di.tableName, di.columnName, dv.schemaVersionNumber";
 
 		$result = $this->db->query($sqlStr);
