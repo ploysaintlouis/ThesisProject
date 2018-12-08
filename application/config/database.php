@@ -74,10 +74,15 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> 'Driver={SQL Server Native Client 11.0};server=107-NANNAPHAT\SQL2018;Database=test',
-	'hostname' => '107-NANNAPHAT\SQL2018',
+	//'dsn'	=> 'Driver={SQL Server Native Client 11.0};server=107-NANNAPHAT\SQL2018;Database=test',
+	//'hostname' => '107-NANNAPHAT\SQL2018',
+	//'username' => 'sa',
+	//'password' => 'password',
+
+	'dsn'	=> 'Driver={SQL Server Native Client 11.0};server=DESKTOP-71LOP0E\SQLEXPRESS;Database=test',
+	'hostname' => 'DESKTOP-71LOP0E\SQLEXPRESS',
 	'username' => 'sa',
-	'password' => 'password',
+	'password' => 'password',	
 	'database' => 'test',
 	'dbdriver' => 'odbc',
 	'dbprefix' => '',
