@@ -108,7 +108,8 @@
 			                		<td><?php echo $define++; ?></td>
 			                		<td><?php echo $value['functionNo'] ?></td>
 									<?php echo $value['fnDesc']; ?>
-			                		<td><?php echo iconv('UCS-2LE', 'UTF-8', $value['fnDesc']); ?></td>
+			                		<!-- <td><?php echo iconv('UCS-2LE', 'UTF-8', $value['fnDesc']); ?></td> -->
+			                		<td><?php echo iconv('UCS-2LE', 'UTF-8',  $value['fnDesc']); ?></td>									
 			                		<td><?php echo $value['functionVersion'] ?></td>
 			                		<td><?php if('0' == $value['functionStatus'] ) { ?>
 			                			<span class="label label-danger"><?php echo UNACTIVE_STATUS; ?> </span>
