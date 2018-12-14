@@ -160,8 +160,8 @@
                 								<td>
                 									<?php $keyId = $projectInfo->projectId."|".$value['inputId']."|".$value['schemaVersionId']."|".$hfield['functionId']; ?>
                 									
-                									<button type="button" name="edit" id="<?php echo $keyId; ?>" class="btn btn-warning btn-xs view" >Edit</button>
-                									<button type="button" name="delete" id="<?php echo $keyId; ?>" class="btn btn-danger btn-xs delete" >Delete</button>
+                								<button type="button" name="edit" id="<?php echo $keyId; ?>" class="btn btn-warning btn-xs view" >Edit</button> 
+													<button type="button" name="delete" id="<?php echo $keyId; ?>" class="btn btn-danger btn-xs delete" >Delete</button>
 
                 									<!-- <a href="#"><span class="label label-primary">Edit</span></a>
                 									<a href="#"><span class="label label-danger">Delete</span></a> -->
@@ -264,6 +264,7 @@
 		</div>
 	</div>
 
+
 	<div id="edit_input_modal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content" style="border-radius:6px;">
@@ -273,12 +274,11 @@
 						<b> <?php echo $resultHeader->functionNo; ?> </b>
 					</h4>
 				</div>
-				<form method="post" id="changeInput_form">
-
-					<div class="modal-body" id="input_detail">
+				<form method="post" id="changeInput_form" >
+					<div class="modal-body" id="input_detail" align="center">
 						<!-- detail here -->
 					</div>
-
+																												
 				<div class="box-body" align="left">
 				 	<button type="submit" name="saveChange" id="saveChange" class="btn btn-primary">
 				 		<i class="fa fa-save"></i> Save
@@ -291,4 +291,5 @@
 			</div>
 		</div>
 	</div>
+
 </section>

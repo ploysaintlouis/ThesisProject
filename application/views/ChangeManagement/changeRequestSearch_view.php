@@ -72,19 +72,19 @@
 					<table id="resultTbl" class="table table-striped">
 						<tbody>
 							<tr>
-								<th>#</th>
+								<th style="text-align: center;">No.</th>
 								<th>Requirement ID</th>
 								<th>Requirement Description</th>
 								<th>Version Number</th>
 								<th>Effective Start Date</th>
-								<th>Action</th>
+								<th style="text-align: center;">Action</th>
 							</tr>
 							<?php 
 			                $define = 1;
 			                foreach($functionList as $value): 
 			                	$classRow = (0 == $define%2)? 'even' : 'odd'; ?>
 			                <tr class="<?php echo $classRow; ?>">
-			                	<td style="text-align: right;width: 5%;">
+			                	<td style="text-align: right;width: 5%;text-align: center;">
 			                		<?php echo $define++; ?>
 			                	</td>
 			                	<td style="text-align: left;width: 15%;">
@@ -93,10 +93,10 @@
 			                	<td style="text-align: left;width: 40%;">
 			                		<?php echo $value['fnDesc'] ?>
 			                	</td>
-			                	<td style="text-align: right;width: 15%;">
+			                	<td style="text-align: right;width: 15%;text-align: left;">
 			                		<?php echo $value['functionVersion'] ?>
 			                	</td>
-			                	<td style="text-align: center;width: 15%;">
+			                	<td style="text-align: center;width: 15%;text-align: left;">
 			                		<?php 
 			                			echo $value['effectiveStartDate'];
 			                		?>

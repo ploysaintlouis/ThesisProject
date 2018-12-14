@@ -1014,7 +1014,10 @@ class ChangeManagement extends CI_Controller{
 			$data['projectCombo'] = $this->mProject->searchStartProjectCombobox();
 		}else if('result' == $view){
 			$data['html'] = 'ChangeManagement/changeRequestResult_view';
-		}else{
+		}else if('result' == $view){
+			$data['html'] = 'ChangeManagement/changeRequestResult_edit';
+		}
+		else{
 			$data['html'] = 'ChangeManagement/changeRequestDetail_view';
 		}
 		
@@ -1038,6 +1041,18 @@ class ChangeManagement extends CI_Controller{
 			file_put_contents($inputFileName, $encodedString);
 		}catch(Exception $e){
 			echo 'Caught exception: ',  $e->getMessage(), "\n";
+		}
+	}
+
+	public function Edit(){
+		//echo projectId;
+		if(isset($functionId) && null != $functionId){
+			$data['functionId'] = $this->functionId->searchProjectDetail($functionId);
+			$data['error_message'] = '';
+			$this->openView($data, 'edit');
+		}else{
+			echo $keyId;
+			echo "error";
 		}
 	}
 }
