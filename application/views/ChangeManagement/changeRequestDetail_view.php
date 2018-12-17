@@ -138,6 +138,7 @@
 	                							<th>
 	                							<!-- <a href="#"><span class="label label-success">Add new input</span></a> -->
 	                								<button type="button" name="addBtn" id="addBtn" class="btn btn-success btn-xs addInput" >Add new input</button>
+													<button type="button" name="addBtn" id="addBtn" class="btn btn-success btn-xs addOutput" >Add new Output</button>
 	                							</th>
 	                						</tr>
 

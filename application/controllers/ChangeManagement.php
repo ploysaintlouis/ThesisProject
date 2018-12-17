@@ -320,6 +320,17 @@ class ChangeManagement extends CI_Controller{
 
 		$displayFlag = (CHANGE_TYPE_ADD == $mode)? 'block': 'none';
 		$requiredField = (CHANGE_TYPE_ADD == $mode)? '<span style="color:red;">*</span>': '';
+
+		if ($mode == 'edit'){
+		if ($row["inputId"] <> null) {
+			$displayInput = 'Input Name';
+		} else {
+			$displayInput = 'Output Name';
+		}
+		} else {
+			$displayInput = 'Input Name';
+		}
+
 //modify 20181217 add output
 		$output = '
 			<input type="hidden" name="changeProjectId" value="'.$row["projectId"].'">
@@ -343,7 +354,7 @@ class ChangeManagement extends CI_Controller{
 			<tr height="40">
 			
 				<td>
-					<label>Input Name: '.$requiredField.'
+					<label >'.$displayInput.' : '.$requiredField.'
 					<p class="text-green" style="margin:0;">'.$row["inputName"].'</p>
 					</label>
 				</td>
