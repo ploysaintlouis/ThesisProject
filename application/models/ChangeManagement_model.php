@@ -35,6 +35,10 @@ class ChangeManagement_model extends CI_Model{
 			$where[] = "inputId = $param->inputId";
 		}
 
+		if(!empty($param->outputId)){
+			$where[] = "outputId = $param->outputId";
+		}
+
 		if(!empty($param->schemaVersionId)){
 			$where[] = "schemaVersionId = $param->schemaVersionId";
 		}

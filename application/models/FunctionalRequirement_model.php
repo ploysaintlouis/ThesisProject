@@ -107,13 +107,27 @@ class FunctionalRequirement_model extends CI_Model {
 			$where[] = "d.schemaVersionId = $param->schemaVersionId";
 		}
 		$where_clause = implode(' AND ', $where);
-
+/* --modify 20181217 add output
 		$sqlStr = "
 			SELECT i.inputName, i.refTableName, i.refColumnName, d.dataType, d.dataLength, d.decimalPoint, d.constraintUnique, d.constraintNull, d.constraintDefault, d.constraintMinValue, d.constraintMaxValue
 			FROM M_FN_REQ_INPUT i
 			INNER JOIN M_DATABASE_SCHEMA_INFO d
 			ON i.refTableName = d.tableName
 			AND i.refColumnName = d.columnName
+			WHERE $where_clause";
+			*/
+		$sqlStr = "
+			SELECT i.inputName, i.refTableName, i.refColumnName, d.dataType, d.dataLength, d.decimalPoint, d.constraintUnique, 
+				   d.constraintNull, d.constraintDefault, d.constraintMinValue, d.constraintMaxValue,i.outputName
+			FROM M_FN_REQ_INPUT i
+			INNER JOIN M_DATABASE_SCHEMA_INFO d
+			ON i.refTableName = d.tableName
+			AND i.refColumnName = d.columnName
+			WHERE $where_clause
+			union all
+			SELECT i.inputName, i.refTableName, i.refColumnName, d.dataType, d.dataLength, d.decimalPoint, d.constraintUnique, 
+			d.constraintNull, d.constraintDefault, d.constraintMinValue, d.constraintMaxValue,i.outputName
+			FROM M_FN_REQ_INPUT i
 			WHERE $where_clause";
 
 		$result = $this->db->query($sqlStr);
@@ -213,11 +227,15 @@ class FunctionalRequirement_model extends CI_Model {
 			$where[] = "d.inputId = $param->inputId";
 		}
 
+		if(isset($param->outputId) && !empty($param->outputId)){
+			$where[] = "d.outputId = $param->outputId";
+		}
+
 		if(isset($param->schemaVersionId) && !empty($param->schemaVersionId)){
 			$where[] = "d.schemaVersionId = $param->schemaVersionId";
 		}
 		$where_clause = implode(' AND ', $where);
-
+//modify add output 20181217
 		$queryStr = "SELECT 
 				h.projectId,
 				h.functionId,
@@ -225,8 +243,10 @@ class FunctionalRequirement_model extends CI_Model {
 				h.functionDescription,
 				v.functionVersionNumber,
 				d.inputId,
+				d.outputId,		
 				d.schemaVersionId,
 				i.inputName,
+				i.outputName,
 				db.tableName,
 				db.columnName,
 				db.dataType,
@@ -245,7 +265,8 @@ class FunctionalRequirement_model extends CI_Model {
 			ON h.functionId = d.functionId
 			AND d.activeFlag = '1'
 			INNER JOIN M_FN_REQ_INPUT i
-			ON d.inputId = i.inputId
+			ON (d.inputId = i.inputId
+			OR d.outputid = i.outputid)
 			INNER JOIN M_DATABASE_SCHEMA_INFO db
 			ON i.refTableName = db.tableName
 			AND i.refColumnName = db.columnName

@@ -101,9 +101,30 @@
 	                			<div class="form-group">
 	                				<table class="table table-condensed">
 	                					<tbody>
+<!--
 	                						<tr>
 	                							<th>#</th>
 	                							<th>Input Name</th>
+	                							<th>Data Type</th>
+	                							<th>Data Length</th>
+	                							<th>Scale</th>
+	                							<th>Unique</th>
+	                							<th>NOT NULL</th>
+	                							<th>Default</th>
+	                							<th>Min</th>
+	                							<th>Max</th>
+	                							<th>Table</th>
+	                							<th>Column</th>
+	                							<th>-->
+	                							<!-- <a href="#"><span class="label label-success">Add new input</span></a> -->
+	          <!--      								<button type="button" name="addBtn" id="addBtn" class="btn btn-success btn-xs addInput" >Add new input</button>
+	                							</th>
+	                						</tr>
+											-->
+	                						<tr>
+	                							<th>#</th>
+	                							<th>Type of Data</th>
+												<th>Data Name</th>
 	                							<th>Data Type</th>
 	                							<th>Data Length</th>
 	                							<th>Scale</th>
@@ -119,13 +140,26 @@
 	                								<button type="button" name="addBtn" id="addBtn" class="btn btn-success btn-xs addInput" >Add new input</button>
 	                							</th>
 	                						</tr>
+
 	                						<?php 
 	                						$define = 1;
 	                						foreach ($resultDetail as $value): ?>
                 							<tr>
+												
                 								<td><?php echo $define++; ?></td>
+												<td>
+												<?php if ($value['inputName'] <> null) { ?>
+														<?php echo "Input"; ?> 
+												<?php } else { ?>
+														<?php echo "Output"; ?>
+												<?php }	?>
+												</td>
                 								<td>
-                									<?php echo $value['inputName']; ?>
+												<?php if ($value['inputName'] <> null) { ?>
+                									<?php echo $value['inputName']; echo $value['outputId']?>
+												<?php } else { ?>
+													<?php echo $value['outputName']; ?>
+												<?php }	?>	
                 								</td>
                 								<td>
                 									<?php echo $value['dataType']; ?>
@@ -158,8 +192,8 @@
                 									<?php echo $value['columnName']; ?>
                 								</td>
                 								<td>
-                									<?php $keyId = $projectInfo->projectId."|".$value['inputId']."|".$value['schemaVersionId']."|".$hfield['functionId']; ?>
-                									
+                									<?php $keyId = $projectInfo->projectId."|".$value['inputId']."|".$value['schemaVersionId']."|".$hfield['functionId']."|".$value['outputId']; ?>
+													
                 								<button type="button" name="edit" id="<?php echo $keyId; ?>" class="btn btn-warning btn-xs view" >Edit</button> 
 													<button type="button" name="delete" id="<?php echo $keyId; ?>" class="btn btn-danger btn-xs delete" >Delete</button>
 
@@ -187,7 +221,8 @@
 	                					<tbody>
 	                						<tr>
 	                							<th>#</th>
-	                							<th>Input Name</th>
+												<th>Type of Data</th>
+												<th>Data Name</th>
 	                							<th>Data Type</th>
 	                							<th>Data Length</th>
 	                							<th>Scale</th>
@@ -204,6 +239,11 @@
 			               						foreach($inputChangeList as $value): ?>
 				               					<tr>
 				               						<td><?php echo $define++; ?></td>
+													<?php if ($value['inputName'] <> null) { ?>
+														<td><?php echo "Input"; ?> </td>
+													<?php } else { ?>
+														<td><?php echo "Output"; ?> </td>
+													<?php }	?>
 				               						<td><?php echo $value['inputName'] ?></td>
 				               						<td><?php echo $value['newDataType'] ?></td>
 				               						<td><?php echo $value['newDataLength'] ?></td>
