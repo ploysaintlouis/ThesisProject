@@ -155,7 +155,7 @@ class FunctionalRequirement_model extends CI_Model {
 
 		$queryStr = "SELECT h.functionId, d.inputId, i.inputName, d.schemaVersionId
 			FROM M_FN_REQ_HEADER h
-			INNER JOIN M_FN_REQ_DETAIL d
+			INNER JOIN M_FN_REQ_DETAIL_INPUT d
 			ON h.functionId = d.functionId
 			AND d.activeFlag = '1'
 			INNER JOIN M_FN_REQ_INPUT i
@@ -168,7 +168,7 @@ class FunctionalRequirement_model extends CI_Model {
 
 	function searchExistFRDetailbyCriteria($param){
 		$sqlStr = "SELECT *
-			FROM M_FN_REQ_DETAIL
+			FROM M_FN_REQ_DETAIL_INPUT
 			WHERE functionId = $param->functionId
 			AND inputId = $param->inputId
 			AND effectiveStartDate = '$param->effectiveStartDate'";
@@ -223,11 +223,11 @@ class FunctionalRequirement_model extends CI_Model {
 			$where[] = "h.functionId = $param->functionId";
 		}
 
-		if(isset($param->inputId) && !empty($param->inputId)){
+		if(isset($param->inputId) && !empty($param->inputId) && ($param->type == '1')){
 			$where[] = "d.inputId = $param->inputId";
 		}
 
-		if(isset($param->outputId) && !empty($param->outputId)){
+		if(isset($param->inputId) && !empty($param->inputId) && ($param->type == '2')){
 			$where[] = "d.outputId = $param->outputId";
 		}
 
@@ -243,10 +243,8 @@ class FunctionalRequirement_model extends CI_Model {
 				h.functionDescription,
 				v.functionVersionNumber,
 				d.inputId,
-				d.outputId,		
 				d.schemaVersionId,
 				i.inputName,
-				i.outputName,
 				db.tableName,
 				db.columnName,
 				db.dataType,
@@ -261,18 +259,17 @@ class FunctionalRequirement_model extends CI_Model {
 			INNER JOIN M_FN_REQ_VERSION v
 			ON h.functionId = v.functionId
 			AND v.activeFlag = '1'
-			INNER JOIN M_FN_REQ_DETAIL d
+			INNER JOIN M_FN_REQ_DETAIL_INPUT d
 			ON h.functionId = d.functionId
 			AND d.activeFlag = '1'
 			INNER JOIN M_FN_REQ_INPUT i
-			ON (d.inputId = i.inputId
-			OR d.outputid = i.outputid)
+			ON d.inputId = i.inputId
 			INNER JOIN M_DATABASE_SCHEMA_INFO db
 			ON i.refTableName = db.tableName
 			AND i.refColumnName = db.columnName
 			AND d.schemaVersionId = db.schemaVersionId
 			WHERE $where_clause
-			ORDER BY h.functionNo";
+			ORDER BY h.functionNo"; 
 			//var_dump($queryStr);
 		$result = $this->db->query($queryStr);
 		return $result->result_array();
@@ -352,7 +349,7 @@ class FunctionalRequirement_model extends CI_Model {
 
 	function insertFRDetail($functionId, $param){
 		$currentDateTime = date('Y-m-d H:i:s');
-		$sqlStr = "INSERT INTO M_FN_REQ_DETAIL (functionId, inputId, schemaVersionId, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ($functionId, $param->inputId, $param->schemaVersionId, '$param->effectiveStartDate', NULL, '$param->activeFlag', '$currentDateTime', '$param->user', '$currentDateTime', '$param->user')";
+		$sqlStr = "INSERT INTO M_FN_REQ_DETAIL_INPUT (functionId, inputId, schemaVersionId, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ($functionId, $param->inputId, $param->schemaVersionId, '$param->effectiveStartDate', NULL, '$param->activeFlag', '$currentDateTime', '$param->user', '$currentDateTime', '$param->user')";
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}
@@ -405,7 +402,7 @@ class FunctionalRequirement_model extends CI_Model {
 		}
 		$where_condition = implode(" AND ", $where);
 
-		$sqlStr = "UPDATE M_FN_REQ_DETAIL
+		$sqlStr = "UPDATE M_FN_REQ_DETAIL_INPUT
 			SET effectiveEndDate = $effectiveEndDate,
 				activeFlag = '$param->activeFlag',
 				updateDate = '$param->currentDate',
@@ -426,7 +423,7 @@ class FunctionalRequirement_model extends CI_Model {
 	}
 
 	function deleteFunctionalRequirementDetail($param){
-		$sqlStr = "DELETE FROM M_FN_REQ_DETAIL
+		$sqlStr = "DELETE FROM M_FN_REQ_DETAIL_INPUT
 			WHERE functionId = $param->functionId
 			AND inputId = $param->inputId
 			AND effectiveStartDate = '$param->effectiveStartDate'";

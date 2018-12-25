@@ -74,26 +74,6 @@
 				});
 			});
 
-			$(document).on('click', '.addOutput', function(){
-				var projectId = $('input[name=projectId]').val();
-				var functionId = $('input[name=functionId]').val();
-				var functionVersion = $('input[name=functionVersion]').val();
-
-				$.ajax({
-					url:"<?php echo base_url(); ?>index.php/ChangeManagement/addFRInputDetail/",
-					method:"POST",
-					data:{
-						projectId: projectId, 
-						functionId: functionId, 
-						functionVersion: functionVersion
-					},
-					success:function(data){
-						$('#edit_input_modal').modal('show');
-						$('#input_detail').html(data);
-					}
-				});
-			});
-
 			$(document).on('click', '.delete', function(){
 				var msg = "Are you sure to delete this functional requirement's input?";
 				

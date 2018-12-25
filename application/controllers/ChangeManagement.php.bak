@@ -572,7 +572,7 @@ class ChangeManagement extends CI_Controller{
 						'functionId' => $functionId,
 						'functionVersion' => $functionVersion,
 						'inputId' => $inputId,
-						'type' => $type,
+						'outputId' => $outputId,
 						'schemaVersionId' => $schemaVersionId);
 					$records = $this->mChange->searchTempFRInputChangeList($criteria);
 					
