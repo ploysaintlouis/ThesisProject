@@ -48,7 +48,7 @@ class Project_model extends CI_Model {
 		$queryStr 
 			= "SELECT 
 				p.projectId, p.projectName, p.projectNameAlias, 
-				CONVERT(nvarchar, p.startDate, 103) as startDate, 
+				CONVERT(nvarchar, p.effdate, 103) as startDate, 
 				CONVERT(nvarchar, p.endDate, 103) as endDate, 
 				p.customer as customer, 
 				p.databaseName, p.hostname, p.port, p.username, p.password, p.startFlag

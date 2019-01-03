@@ -54,7 +54,7 @@ class VersionManagement_TestCase extends CI_Controller{
 
 			$output .= "<option value=''>".PLEASE_SELECT."</option>";
 			foreach($testCaseVersionList as $value){
-				$output .= "<option value='".$value['testCaseVersionId']."'>"."Version ".$value['testCaseVersionNumber']."</option>";
+				$output .= "<option value='".$value['testCaseVersion']."'>"."Version ".$value['testCaseVersionNumber']."</option>";
 			}
 		}
 		echo $output;
@@ -65,7 +65,7 @@ class VersionManagement_TestCase extends CI_Controller{
 
 		$projectId = $this->input->post('inputProjectName');
 		$testCaseId = $this->input->post('inputTestCase');
-		$testCaseVersionId = $this->input->post('inputVersion');
+		$testCaseVersion = $this->input->post('inputVersion');
 
 		$this->FValidate->set_rules('inputProjectName', null, 'required');
 		$this->FValidate->set_rules('inputTestCase', null, 'required');
@@ -73,7 +73,7 @@ class VersionManagement_TestCase extends CI_Controller{
 
 		if($this->FValidate->run()){
 			$criteria = (object) array(
-				'testCaseId' => $testCaseId, 'testCaseVersionId' => $testCaseVersionId);
+				'testCaseId' => $testCaseId, 'testCaseVersion' => $testCaseVersion);
 			$versionInfo = $this->mTC->searchTestCaseVersionInformationByCriteria($criteria);
 
 			if(null != $versionInfo && 0 < count($versionInfo)){
@@ -89,7 +89,7 @@ class VersionManagement_TestCase extends CI_Controller{
 
 		$data['projectId'] = $projectId;
 		$data['testCaseId'] = $testCaseId;
-		$data['testCaseVersionId'] = $testCaseVersionId;
+		$data['testCaseVersion'] = $testCaseVersion;
 
 		//var_dump($testCaseVersionId);
 

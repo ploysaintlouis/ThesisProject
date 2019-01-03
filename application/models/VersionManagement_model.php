@@ -36,7 +36,7 @@ class VersionManagement_model extends CI_Model{
 	}
 
 	public function searchFunctionalRequirementDetailsByVersion($param){
-		$sqlStr = "SELECT 
+	/*	$sqlStr = "SELECT 
 			fh.functionId, 
 			fh.functionNo, 
 			fh.functionDescription,
@@ -62,7 +62,34 @@ class VersionManagement_model extends CI_Model{
 		AND fh.functionId = $param->functionId
 		AND  fd.effectiveStartDate <= '$param->targetDate'
 		AND ('$param->targetDate' <= fd.effectiveEndDate OR fd.effectiveEndDate is null)
-		AND (fd.effectiveEndDate != '$param->targetDate' OR fd.effectiveEndDate is null)";
+		AND (fd.effectiveEndDate != '$param->targetDate' OR fd.effectiveEndDate is null)"; */
+
+		$sqlStr = "SELECT 
+			fh.functionId, 
+			fh.functionNo, 
+			fh.functionDescription,fd.typeData,
+			fd.dataId,
+			fd.dataName,
+			fd.schemaVersionId,
+			ds.tableName, ds.columnName,
+			ds.dataType, ds.dataLength,
+			ds.decimalPoint,
+			ds.constraintUnique, ds.constraintNull,
+			ds.constraintDefault, ds.constraintPrimaryKey,
+			ds.constraintMinValue, ds.constraintMaxValue
+		FROM M_FN_REQ_HEADER fh
+		INNER JOIN M_FN_REQ_DETAIL fd
+		ON fh.functionId = fd.functionId
+		INNER JOIN M_DATABASE_SCHEMA_INFO ds
+		ON ds.tableName = fd.refTableName
+		AND ds.columnName = fd.refColumnName
+		AND ds.schemaVersionId = fd.schemaVersionId
+		WHERE fh.projectId = $param->projectId
+		AND fh.functionId = $param->functionId
+		AND  fd.effectiveStartDate <= '$param->targetDate'
+		AND ('$param->targetDate' <= fd.effectiveEndDate OR fd.effectiveEndDate is null)
+		AND (fd.effectiveEndDate != '$param->targetDate' OR fd.effectiveEndDate is null)" ;
+
 		
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
@@ -154,8 +181,7 @@ class VersionManagement_model extends CI_Model{
 		$sqlStr = "SELECT 
 				th.testCaseId,
 				th.testCaseNo,
-				tv.testCaseVersionId,
-				tv.testCaseVersionNumber
+				tv.testCaseVersion
 			FROM M_TESTCASE_HEADER th
 			INNER JOIN M_TESTCASE_VERSION tv
 			ON th.testCaseId = tv.testCaseId
@@ -295,10 +321,15 @@ class VersionManagement_model extends CI_Model{
 	}
 
 	public function searchRelatedRTMVersion($projectId){
-		$sqlStr = "SELECT * 
+		/*$sqlStr = "SELECT * 
 			FROM M_RTM_VERSION 
 			WHERE projectId = $projectId 
-			ORDER BY rtmVersionNumber";
+			ORDER BY rtmVersionNumber"; */
+		  $sqlStr = "SELECT * 
+			FROM M_RTM a,M_RTM_VERSION b
+			where a.projectId = $projectId 
+			AND a.projectId = b.projectId";
+
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
 	}

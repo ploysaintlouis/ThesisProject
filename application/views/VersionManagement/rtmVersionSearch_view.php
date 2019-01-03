@@ -1,7 +1,7 @@
 <section class="content-header">
 	<h1>
 		<span class="glyphicon glyphicon-list-alt"></span>
-		Inquiry RTM by Version
+		Inquiry RTM
 	</h1>
 	<ol class="breadcrumb">
 		<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -23,7 +23,7 @@
 				</div>
 				<form class="form-horizontal" action="<?php echo base_url() ?>index.php/VersionManagement_RTM/search/" method="post">
 					<input type="hidden" id="selectedProjectId" value="<?php echo $projectId; ?>">
-					<input type="hidden" id="selectedVersionId" value="<?php echo $rtmVersionId; ?>">
+					<!-- <input type="hidden" id="selectedVersionId" value="<?php echo $rtmVersionId; ?>"> -->
 					<div class="box-body">
 						<div class="form-group">
 							<label for="inputProjectName" class="col-sm-2 control-label">
@@ -43,10 +43,10 @@
 	    						</select>
 	    						<?php echo form_error('inputProjectName', '<font color="red">','</font><br>'); ?>
         					</div>
-        					<label for="inputVersion" class="col-sm-2 control-label">
+        				<!--	<label for="inputVersion" class="col-sm-2 control-label">
  								Version
         						<span style="color:red;">*</span>:
-        					</label>
+        					</label> 
         					<div class="col-sm-3">
         						<select id="rtmVersionCombo" name="inputVersion" class="form-control select2" style="width: 100%;" value="<?php echo $rtmVersionId; ?>">
             						<option value="">--Please Select--</option>
@@ -61,7 +61,7 @@
             						} ?>
             					</select>
             					<?php echo form_error('inputVersion', '<font color="red">','</font><br>'); ?>
-        					</div>
+        					</div> -->
 						</div>
 						<div class="form-group">
 							<div class="col-md-12" align="right">
@@ -87,13 +87,13 @@
 	 <div class="row">
 	 	<div class="col-md-12">
 	 		<div class="box box-success box-solid">
-	 			<div class="box-body">
+	 			<div class="box-body no-padding">
 	 				<div class="row">
-	 					<div class="col-sm-12">
+	 					<!--<div class="col-sm-12">
 	 						<div class="pull-right">
 								<button id="btnDiffVersion">Diff with Previous Version</button>
 							</div>
-	 					</div>
+	 					</div> -->
 	 					<div class="col-sm-12">
 	 						 <div class="form-group">
 	 						 	<table id="resultTbl" class="table table-striped">
@@ -101,15 +101,37 @@
 	 						 	  		<tr>
 	 						 	  			<th>#</th>
 	                                        <th>Functional Requirements ID</th>
-	                                        <th>Test Case ID</th>
+											<th>Functional Requirement Version</th>
+											<th>Test Case ID</th>
+	                                        <th>Test Case Version</th>
+											<th>Status</th>
 	 						 	  		</tr>
                                         <?php 
                                             $define = 1;
                                             foreach ($resultList as $value): ?>
                                             <tr>
                                             	<td><?php echo $define++; ?></td>
-                                                <td><?php echo $value['functionNo']; ?></td>
-                                                <td><?php echo $value['testCaseNo']; ?></td>
+												
+                                                <td><?php if(isset($value['functionNo'])){
+													echo $value['functionNo']; } ?>
+												</td>
+                                                <td><?php if(isset($value['functionversion'])) {
+													echo $value['functionversion'];}?>
+												</td>
+                                                <td><?php if(isset($value['testCaseNo'])) {
+													echo $value['testCaseNo'];}?>
+												</td>
+                                                <td><?php if(isset($value['testCaseversion'])) {
+													echo $value['testCaseversion'];}?>
+												</td>
+                                                <td>
+                                                    <?php if(isset($value['activeFlag'])) {
+                                                    if("1" == $value['activeFlag']){
+                                                        echo "<span class='label label-success'>".constant("ACTIVE_STATUS")."</span>";
+                                                    }else{
+                                                        echo "<span class='label label-danger'>".constant("UNACTIVE_STATUS")."</span>";
+                                                    } }?>    
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
 	 						 	  	</tbody>

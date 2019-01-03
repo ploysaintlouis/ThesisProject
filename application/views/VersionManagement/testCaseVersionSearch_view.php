@@ -26,9 +26,9 @@
 				<form class="form-horizontal" action="<?php echo base_url() ?>index.php/VersionManagement_TestCase/search/" method="post">
 					<input type="hidden" id="selectedProjectId" value="<?php echo $projectId; ?>">
 					<input type="hidden" id="selectedTestCaseId" value="<?php echo $testCaseId; ?>">
-					<input type="hidden" id="selectedTestCaseVersionId" value="<?php echo $testCaseVersionId; ?>">
+				<!--	<input type="hidden" id="selectedTestCaseVersion" value="<?php echo $testCaseVersion; ?>"> -->
 
-            		<div class="box-body">
+					<div class="box-body">
             			<div class="form-group">
     						<label for="inputProjectName" class="col-sm-2 control-label">
  								Project's name
@@ -75,12 +75,12 @@
         						<span style="color:red;">*</span>:
         					</label>
         					<div class="col-sm-10">
-        						<select id="versionCombo" name="inputVersion" class="form-control select2" style="width: 100%;" value="<?php echo $testCaseVersionId; ?>">
+        						<select id="versionCombo" name="inputVersion" class="form-control select2" style="width: 100%;" value="<?php echo $testCaseVersion; ?>">
             						<option value="">--Please Select--</option>
             						<?php if(isset($testCaseVersionCombo) && 0 < count($testCaseVersionCombo)){ 
             							foreach($testCaseVersionCombo as $value){ ?>
-            								<option value="<?php echo $value['testCaseVersionId']; ?>" <?php echo set_select('inputVersion', $value['testCaseVersionId'], (!empty($testCaseVersionId) && $testCaseVersionId == $value['testCaseVersionId']? TRUE : FALSE )); ?>>
-	            									<?php echo 'Version '.$value['testCaseVersionNumber']; ?>
+            								<option value="<?php echo $value['testCaseVersion']; ?>" <?php echo set_select('inputVersion', $value['testCaseVersion'], (!empty($testCaseVersion) && $testCaseVersion == $value['testCaseVersion']? TRUE : FALSE )); ?>>
+	            									<?php echo 'Version '.$value['testCaseVersion']; ?>
 	        								</option>
             						<?php } } ?>
             					</select>
@@ -137,7 +137,7 @@
 							<div class="form-group">
 								<dl>
 									<dt>Version:</dt>
-									<dd><?php echo $resultVersionInfo->testCaseVersionNumber; ?></dd>
+									<dd><?php echo $resultVersionInfo->testCaseVersion; ?></dd>
 								</dl>
 							</div>
 						</div>
@@ -152,9 +152,9 @@
 									}else{
 										echo "<span class='badge bg-red'>".constant("UNACTIVE_STATUS")."</span>";
 									} ?>
-									<div class="pull-right">
+								<!--	<div class="pull-right">
 										<button id="btnDiffVersion">Diff with Previous Version</button>
-									</div>
+									</div> -->
 									
 									</dd>
 								</dl>

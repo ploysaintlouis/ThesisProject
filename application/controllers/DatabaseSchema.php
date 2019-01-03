@@ -75,6 +75,7 @@ class DatabaseSchema extends CI_Controller{
 
 	public function doUpload(){
 		$fileName = "DB_".date("YmdHis")."_".$this->session->session_id;
+		
 		$config['upload_path'] = './uploads/';
         $config['allowed_types'] = 'csv';
         $config['file_name'] = $fileName;
@@ -88,6 +89,8 @@ class DatabaseSchema extends CI_Controller{
         $projectName = $this->input->post('projectName');
 		$projectNameAlias = $this->input->post('projectNameAlias');
 		$screenMode = $this->input->post('screenMode');
+
+echo $config;
 
 		$this->load->library('upload', $config);
 

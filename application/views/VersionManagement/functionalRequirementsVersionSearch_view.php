@@ -156,7 +156,8 @@
 									<tbody>
 										<tr>
                 							<th>#</th>
-                							<th>Input Name</th>
+											<th>Type of Data</th>
+                							<th>Data Name</th>
                 							<th>Data Type</th>
                 							<th>Data Length</th>
                 							<th>Scale</th>
@@ -174,7 +175,15 @@
                 							<tr>
                 								<td><?php echo $define++; ?></td>
                 								<td>
-                									<?php echo $value['inputName']; ?>
+													<?php if ($value['typeData'] = '1' ){
+														echo "Input"; 
+													}else{
+														echo "Output"; 
+													}?>
+                								</td>
+                								<td>
+                									<!-- <?php echo $value['inputName']; ?> -->
+													<?php echo $value['dataName']; ?>
                 								</td>
                 								<td>
                 									<?php echo $value['dataType']; ?>

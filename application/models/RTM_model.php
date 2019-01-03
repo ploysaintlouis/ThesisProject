@@ -11,7 +11,7 @@ class RTM_model extends CI_Model{
 	}
 
 	function searchRTMInfoByCriteria($projectId){
-		$sqlStr = "SELECT 
+		/*$sqlStr = "SELECT 
 				f.functionNo,
 				t.testCaseNo,
 				CONVERT(nvarchar, r.createDate, 120) as createDate,
@@ -24,7 +24,18 @@ class RTM_model extends CI_Model{
 			LEFT JOIN M_USERS u
 			ON r.createUser = u.username
 			WHERE r.projectId = '$projectId'
-			AND r.activeFlag = '1'";
+			AND r.activeFlag = '1'"; */
+	$sqlStr = "SELECT 
+					a.testCaseversion,b.testCaseNo,
+					a.functionversion,a.functionId,c.functionNo,
+					a.effectiveStartDate as createDate
+					FROM M_RTM_VERSION a
+					LEFT JOIN M_FN_REQ_HEADER c
+					ON a.functionId = c.functionId
+					LEFT JOIN M_TESTCASE_HEADER b
+					on a.testCaseId = b.testCaseId
+					where a.projectid = '$projectId'
+					and a.activeFlag = '1' ";
 
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
@@ -52,13 +63,13 @@ class RTM_model extends CI_Model{
 		$sqlStr = "SELECT *
 			FROM M_RTM_VERSION 
 			WHERE projectId = $param->projectId
-			AND rtmVersionId = $param->rtmVersionId";
+			";
 		$result = $this->db->query($sqlStr);
 		return $result->row();
 	}
 
 	function searchRTMVersionInfoByCriteria($param){
-		$sqlStr = "SELECT 
+		/* $sqlStr = "SELECT 
 			new.rtmVersionId as new_rtmVersionId, 
 			new.effectiveStartDate, 
 			new.effectiveEndDate, 
@@ -68,9 +79,22 @@ class RTM_model extends CI_Model{
 			INNER JOIN M_RTM_VERSION old
 			ON new.previousVersionId = old.rtmVersionId
 			WHERE new.projectId = {$param->projectId}
-			AND new.rtmVersionNumber = {$param->rtmVersionNumber}";
+			AND new.rtmVersionNumber = {$param->rtmVersionNumber}"; */
+
+			$sqlStr ="SELECT 
+					a.testCaseversion,b.testCaseNo,
+					a.functionversion,a.functionId,c.functionNo,
+					a.effectiveStartDate, 
+					a.effectiveEndDate, a.activeFlag
+					FROM M_RTM_VERSION a
+					LEFT JOIN M_FN_REQ_HEADER c
+					ON a.functionId = c.functionId
+					LEFT JOIN M_TESTCASE_HEADER b
+					on a.testCaseId = b.testCaseId
+					where a.projectid = $param->projectId ";
 		$result = $this->db->query($sqlStr);
-		return $result->row();
+		//return $result->row();
+		return $result->result_array();
 	}	
 
 	function insertRTMInfo($param, $user){

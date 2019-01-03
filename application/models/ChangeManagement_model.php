@@ -31,12 +31,8 @@ class ChangeManagement_model extends CI_Model{
 			$where[] = "functionVersion = $param->functionVersion";
 		}
 
-		if(!empty($param->inputId)){
-			$where[] = "inputId = $param->inputId";
-		}
-
-		if(!empty($param->outputId)){
-			$where[] = "outputId = $param->outputId";
+		if(!empty($param->dataId)){
+			$where[] = "dataId = $param->dataId";
 		}
 
 		if(!empty($param->schemaVersionId)){
@@ -44,11 +40,14 @@ class ChangeManagement_model extends CI_Model{
 		}
 
 		//For Adding new input
-		if(!empty($param->inputName) && !empty($param->table) && !empty($param->column)){
-			$where[] = "((inputName = '$param->inputName') 
+	/*	if(!empty($param->dataName) && !empty($param->table) && !empty($param->column)){
+			$where[] = "((dataName = '$param->dataName') 
 				OR (tableName = '$param->table' AND columnName = '$param->column'))";
 		}
-
+		*/
+		if(!empty($param->dataName)){
+			$where[] = "((dataName = '$param->dataName'))";
+		}
 		$where_clause = implode(' AND ', $where);
 
 		$sqlStr = "SELECT *
@@ -123,7 +122,6 @@ class ChangeManagement_model extends CI_Model{
 	function insertTempFRInputChange($param){
 		$currentDateTime = date('Y-m-d H:i:s');
 
-		$inputId = !empty($param->inputId)? $param->inputId : "NULL";
 		$schemaVersionId = !empty($param->schemaVersionId)? $param->schemaVersionId : "NULL";
 		$dataType = !empty($param->dataType)? "'".$param->dataType."'" : "NULL";
 		$dataLength = !empty($param->dataLength)? $param->dataLength : "NULL";
@@ -136,13 +134,14 @@ class ChangeManagement_model extends CI_Model{
 		$tableName = !empty($param->table)? "'".$param->table."'" : "NULL";
 		$columnName = !empty($param->column)? "'".$param->column."'" : "NULL";
 
-		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion, inputId, inputName, schemaVersionId, newDataType, newDataLength, newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate) 
+		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion,typeData, dataId, dataName, schemaVersionId, newDataType, newDataLength, newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate) 
 			VALUES (
 				$param->userId, 
 				$param->functionId,
 				$param->functionVersion,
-				$inputId,
-				'$param->inputName',
+				$param->typeData,
+				$param->dataId,
+				$param->dataName,
 				$schemaVersionId,
 				$dataType,
 				$dataLength,
@@ -170,7 +169,7 @@ class ChangeManagement_model extends CI_Model{
 
 	function insertChangeRequestDetail($param){
 
-		$inputId = !empty($param->inputId)? $param->inputId : "NULL";
+		$dataId = !empty($param->dataId)? $param->dataId : "NULL";
 		$schemaVersionId = !empty($param->schemaVersionId)? $param->schemaVersionId : "NULL";
 
 		$dataType = !empty($param->dataType)? "'".$param->dataType."'" : "NULL";
@@ -184,7 +183,7 @@ class ChangeManagement_model extends CI_Model{
 		$tableName = !empty($param->tableName)? "'".$param->tableName."'" : "NULL";
 		$columnName = !empty($param->columnName)? "'".$param->columnName."'" : "NULL";
 
-		$sqlStr = "INSERT INTO T_CHANGE_REQUEST_DETAIL (changeRequestNo, sequenceNo, changeType, refInputId, refSchemaVersionId, inputName, dataType, dataLength, scale, constraintUnique, constraintNotNull, constraintDefault, constraintMin, constraintMax, refTableName, refColumnName) VALUES ('$param->changeRequestNo', $param->sequenceNo, '$param->changeType', $inputId, $schemaVersionId, '$param->inputName', $dataType, $dataLength, $scale, $unique, $notNull, $default, $min, $max, $tableName, $columnName)";
+		$sqlStr = "INSERT INTO T_CHANGE_REQUEST_DETAIL (changeRequestNo, sequenceNo, changeType,typeData, refdataId, refSchemaVersionId, dataName, dataType, dataLength, scale, constraintUnique, constraintNotNull, constraintDefault, constraintMin, constraintMax, refTableName, refColumnName) VALUES ('$param->changeRequestNo', $param->sequenceNo, '$param->changeType','$param->typeData', $dataId, $schemaVersionId, '$param->dataName', $dataType, $dataLength, $scale, $unique, $notNull, $default, $min, $max, $tableName, $columnName)";
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}
@@ -619,7 +618,9 @@ class ChangeManagement_model extends CI_Model{
 					//insert new input (case: never has input before)
 					$paramFRInput = (object) array(
 						'projectId' => $affectedProjectId,
-						'inputName' => $keyInputName,
+					//	'inputName' => $keyInputName,
+						'typeData' => $value->typeData,
+						'dataName' => $keydataName,
 						'referTableName' => $value->refTableName,
 						'referColumnName' => $value->refColumnName,
 						'user' => $user);
@@ -1004,8 +1005,8 @@ class ChangeManagement_model extends CI_Model{
 				'changeRequestNo' => $changeRequestNo,
 				'sequenceNo' => $i++,
 				'changeType' => $value['changeType'],
-				'inputId' => $value['inputId'],
-				'inputName' => $value['inputName'], 
+				'dataId' => $value['dataId'],
+				'dataName' => $value['dataName'], 
 				'schemaVersionId' => $value['schemaVersionId'],
 				'dataType' => $value['newDataType'],
 				'dataLength' => $value['newDataLength'],

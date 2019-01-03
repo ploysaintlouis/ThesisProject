@@ -97,16 +97,16 @@ class TestCase_model extends CI_Model{
 			$where[] = "h.testCaseId = $param->testCaseId";
 		}
 		if(isset($param->testCaseVersionNumber) && !empty($param->testCaseVersionNumber)){
-			$where[] = "v.testCaseVersionNumber = $param->testCaseVersionNumber";
+			$where[] = "v.testCaseVersion = $param->testCaseVersion";
 		}
-		if(isset($param->testCaseVersionId) && !empty($param->testCaseVersionId)){
-			$where[] = "v.testCaseVersionId = $param->testCaseVersionId";
+		if(isset($param->testCaseVersion) && !empty($param->testCaseVersion)){
+			$where[] = "v.testCaseVersion = $param->testCaseVersion";
 		}
 		$where_condition = implode(" AND ", $where);
 		
 		$sqlStr = "SELECT 
-			h.testCaseId, h.testCaseNo, v.testCaseVersionId, v.testCaseVersionNumber, 
-			v.previousVersionId, v.effectiveStartDate, v.effectiveEndDate, v.updateDate, v.activeFlag
+			h.testCaseId, h.testCaseNo, v.testCaseVersion, v.testCaseVersionNumber, 
+			v.effectiveStartDate, v.effectiveEndDate, v.updateDate, v.activeFlag
 			FROM M_TESTCASE_HEADER h
 			INNER JOIN M_TESTCASE_VERSION v
 			ON h.testCaseId = v.testCaseId
@@ -129,7 +129,7 @@ class TestCase_model extends CI_Model{
 
 	function insertTestCaseDetail($param, $user){
 		$currentDateTime = date('Y-m-d H:i:s');
-		$sqlStr = "INSERT INTO M_TESTCASE_DETAIL (testCaseId, refInputId, refInputName, testData, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseId}', {$param->refInputId}, '{$param->refInputName}', '{$param->testData}', '{$param->effectiveStartDate}', NULL, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
+		$sqlStr = "INSERT INTO M_TESTCASE_DETAIL (testCaseId, refInputId, refInputName, refOutputId, refOutputName, testData, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseId}', {$param->refInputId}, '{$param->refInputName}', {$param->refOutputId}, '{$param->refOutputName}', '{$param->testData}', '{$param->effectiveStartDate}', NULL, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}

@@ -78,34 +78,47 @@ class FunctionalRequirement_model extends CI_Model {
 		return $result->result_array();
 	}
 
-	function searchFRInputInformation($projectId, $inputName, $activeFlag){
+	function searchFRInputInformation($projectId, $dataName, $activeFlag){
 		$activeFlag = (!empty($activeFlag)? "'".$activeFlag."'": "NULL");
-		$queryStr = "SELECT * 
+/*		$queryStr = "SELECT * 
 			FROM M_FN_REQ_INPUT i 
 			WHERE i.projectId = $projectId 
-			AND i.inputName = '$inputName'
+			AND i.inputName = '$dataName'
+			AND ($activeFlag is null or i.activeFlag = $activeFlag)
+			ORDER BY i.createDate desc";
+	*/
+		$queryStr = "SELECT projectid,dataId,dataName,refTableName,refColumnName,
+			createDate,createUser,updateDate,activeFlag 
+			FROM M_FN_REQ_DETAIL i
+			WHERE i.projectId = $projectId
+			AND i.dataName = '$dataName' 
 			AND ($activeFlag is null or i.activeFlag = $activeFlag)
 			ORDER BY i.createDate desc";
 		$result = $this->db->query($queryStr);
 		return $result->row();
 	}
 
-	function searchFRInputInfoByInputId($inputId){
-		$queryStr = "SELECT * 
+	function searchFRInputInfoByInputId($dataId){
+		/*$queryStr = "SELECT * 
 			FROM M_FN_REQ_INPUT i 
-			WHERE i.inputId = $inputId";
+			WHERE i.inputId = $dataId";
+			*/
+		$queryStr = "SELECT projectid,dataId,dataName,refTableName,refColumnName,
+			createDate,createUser,updateDate,activeFlag
+			FROM M_FN_REQ_DETAIL i 
+			WHERE i.dataId = $dataId";
 		$result = $this->db->query($queryStr);
 		return $result->row();
 	}
 
 	function searchFRInputDetailByCriteria($param){
-		if(null != $param->inputId && !empty($param->inputId)){
-			$where[] = "i.inputId = $param->inputId";
+		if(null != $param->inputId && !empty($param->dataId)){
+			$where[] = "i.dataId = $param->dataId";
 		}
-
+/*
 		if(null != $param->schemaVersionId && !empty($param->schemaVersionId)){
 			$where[] = "d.schemaVersionId = $param->schemaVersionId";
-		}
+		}*/
 		$where_clause = implode(' AND ', $where);
 /* --modify 20181217 add output
 		$sqlStr = "
@@ -115,7 +128,7 @@ class FunctionalRequirement_model extends CI_Model {
 			ON i.refTableName = d.tableName
 			AND i.refColumnName = d.columnName
 			WHERE $where_clause";
-			*/
+			
 		$sqlStr = "
 			SELECT i.inputName, i.refTableName, i.refColumnName, d.dataType, d.dataLength, d.decimalPoint, d.constraintUnique, 
 				   d.constraintNull, d.constraintDefault, d.constraintMinValue, d.constraintMaxValue,i.outputName
@@ -128,7 +141,13 @@ class FunctionalRequirement_model extends CI_Model {
 			SELECT i.inputName, i.refTableName, i.refColumnName, d.dataType, d.dataLength, d.decimalPoint, d.constraintUnique, 
 			d.constraintNull, d.constraintDefault, d.constraintMinValue, d.constraintMaxValue,i.outputName
 			FROM M_FN_REQ_INPUT i
-			WHERE $where_clause";
+			WHERE $where_clause";*/
+		$sqlStr = "SELECT i.typedata,i.dataid,i.dataname,i.refTableName, i.refColumnName,
+				      i.dataType,i.dataLength, i.decimalPoint, i.constraintUnique, 
+					i.constraintNull, i.constraintDefault, i.constraintMinValue,
+					 i.constraintMaxValue
+					 FROM M_FN_REQ_DETAIL i
+					 where $where_clause";
 
 		$result = $this->db->query($sqlStr);
 		return $result->row_array();
@@ -138,28 +157,27 @@ class FunctionalRequirement_model extends CI_Model {
 		if(isset($param->functionId) && !empty($param->functionId)){
 			$where[] = "h.functionId = $param->functionId";
 		}
-		if(isset($param->inputName) && !empty($param->inputName)){
-			$where[] = "i.inputName = '$param->inputName'";
+		if(isset($param->dataName) && !empty($param->dataName)){
+			$where[] = "d.dataName = '$param->dataName'";
 		}
-		if(isset($param->inputId) && !empty($param->inputId)){
-			$where[] = "i.inputId = $param->inputId";
+		if(isset($param->dataId) && !empty($param->dataId)){
+			$where[] = "d.dataId = $param->dataId";
 		}
 		if(isset($param->schemaVersionId) && !empty($param->schemaVersionId)){
 			$where[] = "d.schemaVersionId = $param->schemaVersionId";
 		}
-		if(isset($param->inputActiveFlag) && !empty($param->inputActiveFlag)){
+	/*	if(isset($param->inputActiveFlag) && !empty($param->inputActiveFlag)){
 			$where[] = "i.activeFlag = '$param->inputActiveFlag'";
 		}
+		*/
 
 		$where_clause = implode(' AND ', $where);
 
-		$queryStr = "SELECT h.functionId, d.inputId, i.inputName, d.schemaVersionId
+		$queryStr = "SELECT h.functionId, d.dataId, d.dataName, d.schemaVersionId
 			FROM M_FN_REQ_HEADER h
-			INNER JOIN M_FN_REQ_DETAIL_INPUT d
+			INNER JOIN M_FN_REQ_DETAIL d
 			ON h.functionId = d.functionId
 			AND d.activeFlag = '1'
-			INNER JOIN M_FN_REQ_INPUT i
-			ON d.inputId = i.inputId
 			WHERE $where_clause";
 
 		$result = $this->db->query($queryStr);
@@ -167,19 +185,35 @@ class FunctionalRequirement_model extends CI_Model {
 	}
 
 	function searchExistFRDetailbyCriteria($param){
-		$sqlStr = "SELECT *
+		/*$sqlStr = "SELECT *
 			FROM M_FN_REQ_DETAIL_INPUT
 			WHERE functionId = $param->functionId
 			AND inputId = $param->inputId
 			AND effectiveStartDate = '$param->effectiveStartDate'";
+			*/
+		$sqlStr = "SELECT functionId,dataId,schemaVersionId,effectiveStartDate,effectiveEndDate,
+			activeFlag,createDate,createUser,updateDate,updateUser
+			FROM M_FN_REQ_DETAIL
+			WHERE functionId = $param->functionId
+			AND dataId = $param->dataId 
+			AND effectiveStartDate = '$param->effectiveStartDate'";
+
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
 	}
 
 	function searchExistFRInputsByTableAndColumnName($tableName, $columnName, $projectId, $activeFlag){
 		$activeFlag = (!empty($activeFlag)? "'".$activeFlag."'": "NULL");
-		$queryStr = "SELECT *
+	/*	$queryStr = "SELECT *
 			FROM M_FN_REQ_INPUT fi
+			WHERE fi.refTableName = '$tableName'
+			AND fi.refColumnName = '$columnName'
+			AND fi.projectId = $projectId
+			AND ($activeFlag is null or fi.activeFlag = $activeFlag)";
+			*/
+		$queryStr = " SELECT projectid,dataId,dataName,refTableName,refColumnName,createDate,createUser,
+				updateDate,updateUser,activeFlag
+				FROM M_FN_REQ_DETAIL fi
 			WHERE fi.refTableName = '$tableName'
 			AND fi.refColumnName = '$columnName'
 			AND fi.projectId = $projectId
@@ -223,20 +257,16 @@ class FunctionalRequirement_model extends CI_Model {
 			$where[] = "h.functionId = $param->functionId";
 		}
 
-		if(isset($param->inputId) && !empty($param->inputId) && ($param->type == '1')){
-			$where[] = "d.inputId = $param->inputId";
-		}
-
-		if(isset($param->inputId) && !empty($param->inputId) && ($param->type == '2')){
-			$where[] = "d.outputId = $param->outputId";
+		if(isset($param->dataId) && !empty($param->dataId)){
+			$where[] = "v.dataId = $param->dataId";
 		}
 
 		if(isset($param->schemaVersionId) && !empty($param->schemaVersionId)){
-			$where[] = "d.schemaVersionId = $param->schemaVersionId";
+			$where[] = "db.schemaVersionId = $param->schemaVersionId";
 		}
 		$where_clause = implode(' AND ', $where);
 //modify add output 20181217
-		$queryStr = "SELECT 
+		/*$queryStr = "SELECT 
 				h.projectId,
 				h.functionId,
 				h.functionNo,
@@ -269,7 +299,37 @@ class FunctionalRequirement_model extends CI_Model {
 			AND i.refColumnName = db.columnName
 			AND d.schemaVersionId = db.schemaVersionId
 			WHERE $where_clause
-			ORDER BY h.functionNo"; 
+			ORDER BY h.functionNo"; */
+			$queryStr = "SELECT 	h.projectId,
+				h.functionId,
+				h.functionNo,
+				h.functionDescription,
+				v.functionVersion,
+				db.schemaVersionId,
+				v.typeData,
+				v.dataId,
+				V.dataName,
+				v.refTableName,
+				v.refColumnName,
+				v.dataType,
+				v.dataLength,
+				v.decimalPoint,
+				v.constraintUnique,
+				v.constraintNull,
+				v.constraintDefault,
+				v.constraintMinValue,
+				v.constraintMaxValue
+		FROM M_FN_REQ_HEADER h
+		INNER JOIN M_FN_REQ_DETAIL v
+		ON h.functionId = v.functionId
+		AND h.projectid = v.projectid
+		AND v.activeFlag = '1'
+		INNER JOIN M_DATABASE_SCHEMA_INFO db
+		ON v.refTableName = db.tableName
+		AND v.refColumnName = db.columnName
+		WHERE $where_clause
+		ORDER BY v.dataId";
+
 			//var_dump($queryStr);
 		$result = $this->db->query($queryStr);
 		return $result->result_array();
@@ -336,11 +396,17 @@ class FunctionalRequirement_model extends CI_Model {
 
 	function insertFRInput($param){
 		$currentDateTime = date('Y-m-d H:i:s');
-		$sqlStr = "INSERT INTO M_FN_REQ_INPUT (projectId, inputName, refTableName, refColumnName, createDate, createUser, updateDate, updateUser) VALUES ({$param->projectId}, '{$param->inputName}', '{$param->referTableName}', '{$param->referColumnName}', '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}')";
+		/*$sqlStr = "INSERT INTO M_FN_REQ_INPUT (projectId, inputName, refTableName, refColumnName, createDate, createUser, updateDate, updateUser) VALUES ({$param->projectId}, '{$param->inputName}', '{$param->referTableName}', '{$param->referColumnName}', '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}')";
+		*/
+		$sqlStr = " INSERT INTO M_FN_REQ_DETAIL (projectId,typeData,dataName,refTableName,refColumnName,
+		 createDate,createUser,updateDate,updateUser)
+		 VALUES ({{$param->projectId},'{$param->typeData}', '{$param->dataName}', '{$param->referTableName}',
+		 '{$param->referColumnName}', '$currentDateTime', '{$param->user}', '$currentDateTime', 
+		 '{$param->user}')";
 		//var_dump($sqlStr);
 		$result = $this->db->query($sqlStr);
 		if($result){
-			$query = $this->db->query("SELECT IDENT_CURRENT('M_FN_REQ_INPUT') as last_id");
+			$query = $this->db->query("SELECT IDENT_CURRENT('M_FN_REQ_DETAIL') as last_id");
 			$resultId = $query->result();
 			return $resultId[0]->last_id;
 		}

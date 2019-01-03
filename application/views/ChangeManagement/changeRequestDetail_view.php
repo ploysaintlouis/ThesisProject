@@ -84,7 +84,7 @@
                 								<label for="functionNo" style="margin-right: 3px;margin-bottom: 0px;">Functional Requirement Version:</label>
                 							</td>
                 							<td height="10" style="width: 70%;">
-                								<label for="projectName" style="margin-left: 5px;margin-bottom: 0px;"><?php echo $resultHeader->functionVersionNumber; ?></label>
+                								<label for="projectName" style="margin-left: 5px;margin-bottom: 0px;"><?php echo $resultHeader->functionVersion; ?></label>
                 							</td>
                 						</tr>
                 					</table>
@@ -137,8 +137,7 @@
 	                							<th>Column</th>
 	                							<th>
 	                							<!-- <a href="#"><span class="label label-success">Add new input</span></a> -->
-	                								<button type="button" name="addBtn" id="addBtn" class="btn btn-success btn-xs addInput" >Add new input</button>
-													<button type="button" name="addBtn" id="addBtn" class="btn btn-success btn-xs addOutput" >Add new Output</button>
+	                								<button type="button" name="addBtn" id="addBtn" class="btn btn-success btn-xs addInput" >Add new Input/Output</button>
 	                							</th>
 	                						</tr>
 
@@ -149,18 +148,14 @@
 												
                 								<td><?php echo $define++; ?></td>
 												<td>
-												<?php if ($value['inputName'] <> null) { ?>
+												<?php if ($value['typeData'] = '1') { ?>
 														<?php echo "Input"; ?> 
 												<?php } else { ?>
 														<?php echo "Output"; ?>
 												<?php }	?>
 												</td>
                 								<td>
-												<?php if ($value['inputName'] <> null) { ?>
-                									<?php echo $value['inputName']; echo $value['outputId']?>
-												<?php } else { ?>
-													<?php echo $value['outputName']; ?>
-												<?php }	?>	
+                									<?php echo $value['dataName']; ?>
                 								</td>
                 								<td>
                 									<?php echo $value['dataType']; ?>
@@ -187,13 +182,13 @@
                 									<?php echo $value['constraintMaxValue']; ?>
                 								</td>
                 								<td>
-                									<?php echo $value['tableName']; ?>
+                									<?php echo $value['refTableName']; ?>
                 								</td>
                 								<td>
-                									<?php echo $value['columnName']; ?>
+                									<?php echo $value['refColumnName']; ?>
                 								</td>
                 								<td>
-                									<?php $keyId = $projectInfo->projectId."|".$value['inputId']."|".$value['schemaVersionId']."|".$hfield['functionId']."|".$value['type']; ?>
+                									<?php $keyId = $projectInfo->projectId."|".$value['dataId']."|".$value['schemaVersionId']."|".$hfield['functionId']."|".$value['typeData']; ?>
 													
                 								<button type="button" name="edit" id="<?php echo $keyId; ?>" class="btn btn-warning btn-xs view" >Edit</button> 
 													<button type="button" name="delete" id="<?php echo $keyId; ?>" class="btn btn-danger btn-xs delete" >Delete</button>
@@ -240,12 +235,12 @@
 			               						foreach($inputChangeList as $value): ?>
 				               					<tr>
 				               						<td><?php echo $define++; ?></td>
-													<?php if ($value['inputName'] <> null) { ?>
+													<?php if ($value['typeData'] = '1') { ?>
 														<td><?php echo "Input"; ?> </td>
 													<?php } else { ?>
 														<td><?php echo "Output"; ?> </td>
 													<?php }	?>
-				               						<td><?php echo $value['inputName'] ?></td>
+				               						<td><?php echo $value['dataName'] ?></td>
 				               						<td><?php echo $value['newDataType'] ?></td>
 				               						<td><?php echo $value['newDataLength'] ?></td>
 				               						<td><?php echo $value['newScaleLength'] ?></td>
@@ -311,7 +306,7 @@
 			<div class="modal-content" style="border-radius:6px;">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Change Input of Functional Requirements ID: 
+					<h4 class="modal-title">Change Input/Output of Functional Requirements ID: 
 						<b> <?php echo $resultHeader->functionNo; ?> </b>
 					</h4>
 				</div>

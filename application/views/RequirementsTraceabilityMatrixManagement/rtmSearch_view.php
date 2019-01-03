@@ -78,9 +78,11 @@
 			            	<tr style="background: #CACFD2;">
 								<th class="col-sm-1">#</th>
 								<th class="col-sm-4">Functional Requirement ID</th>
-								<th class="col-sm-3">Test Case ID</th>
+								<th class="col-sm-3">Functional Requirement Version</th>
+								<th class="col-sm-4">Test Case ID</th>
+								<th class="col-sm-3">Test Case Version</th>
 								<th class="col-sm-2">Create Date</th>
-								<th class="col-sm-2">Create User</th>
+							<!--	<th class="col-sm-2">Create User</th> -->
 			                </tr>
 		                <?php if(null != $searchResultList and 0 < count($searchResultList)){ ?>
 			                	<?php 
@@ -90,9 +92,11 @@
 					                <tr class="<?php echo $classRow; ?>">
 					                	<td><?php echo $define++; ?></td>
 					                	<td><?php echo $value['functionNo'] ?></td>
+					                	<td><?php echo $value['functionversion'] ?></td>
 					                	<td><?php echo $value['testCaseNo'] ?></td>
+					                	<td><?php echo $value['testCaseversion'] ?></td>
 					                	<td><?php echo $value['createDate'] ?></td>
-					                	<td><?php echo $value['createUser'] ?></td>
+					          <!--      	<td><?php echo $value['createUser'] ?></td> -->
 					                </tr>
 				            	<?php endforeach; ?>
 		                <?php } else { ?>

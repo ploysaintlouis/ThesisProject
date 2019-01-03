@@ -77,6 +77,7 @@ class FunctionalRequirement extends CI_Controller {
 		$data['hfield'] = $hfield;
 		$data['error_message'] = $errorMessage;
 		$this->openView($data, 'upload');
+		echo $screenMode;
 	}
 
 	public function doUpload(){

@@ -47,7 +47,7 @@ class DatabaseSchema_model extends CI_Model{
 			WHERE $where_clause
 			AND dv.projectid = di.projectid
 			AND dv.createUser = u.username
-			ORDER BY di.tableName, di.columnName, dv.schemaVersionNumber";
+			ORDER BY di.tableName, di.columnName,dv.schemaVersionNumber ";
 
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
@@ -81,7 +81,7 @@ class DatabaseSchema_model extends CI_Model{
 	}
 
 	function searchExistDatabaseSchemaInfo($tableName, $columnName, $projectId){
-		$sqlStr = "SELECT di.*
+		/*$sqlStr = "SELECT di.*
 			FROM M_DATABASE_SCHEMA_INFO di
 			INNER JOIN M_DATABASE_SCHEMA_VERSION dv
 			ON di.schemaVersionId = dv.schemaVersionId
@@ -89,6 +89,16 @@ class DatabaseSchema_model extends CI_Model{
 			AND di.tableName  = '$tableName'
 			AND di.columnName = '$columnName'
 			AND dv.activeFlag = '1'";
+			*/
+		$sqlStr = "SELECT di.*
+			FROM M_DATABASE_SCHEMA_INFO di,M_DATABASE_SCHEMA_VERSION dv
+			WHERE di.projectId = $projectId
+			AND di.tableName  = '$tableName'
+			AND di.columnName = '$columnName'
+			AND dv.activeFlag = '1'
+			AND di.schemaVersionId = dv.schemaVersionId
+			AND di.tableName = dv.tableName
+			AND di.columnName = dv.columnName";
 		$result = $this->db->query($sqlStr);
 		return $result->row();
 	}
