@@ -28,7 +28,7 @@
 				<div class="box-header with-border">
              		<h3 class="box-title">Import New Functional Requirement</h3>
             	</div>
-            	<form role="form" action="<?php echo base_url() ?>FunctionalRequirement/doUpload/" method="post" enctype="multipart/form-data">
+            	<form role="form" action="<?php echo base_url() ?>index.php/FunctionalRequirement/doUpload/" method="post" enctype="multipart/form-data">
             		<?php echo form_hidden($hfield); ?>
             		<div class="box-body">
             			<div class="row">
@@ -59,7 +59,7 @@
             					<div class="form-group">
             						<?php $var = ('0' == $hfield['screenMode'])? 'disabled' : ''; ?>
             						<button type="submit" class="btn bg-primary" style="width: 100px;" <?php echo $var;?> >
-	                					<i class="fa fa-upload"></i>
+                    					<i class="fa fa-upload"></i>
 	                					Upload
 	                				</button>
             					</div>

@@ -23,21 +23,20 @@
 	            			<div class="col-sm-12">
 	            				<div class="form-group">
 	            					<label for="inputProjectName">Project's name<span style="color:red;">*</span>:</label>
-	            					<select name="inputProjectName" class="form-control select2" style="width: 100%;" value="<?php echo $formData->projectId ?>">
+	            					<select id="inputProjectName" name="inputProjectName" class="form-control select2" style="width: 100%;" value="<?php echo $formData->projectId ?>">
 										<option value="">--Please Select--</option>
 										<?php if(null != $projectCombo) {  ?>
-										<?php foreach($projectCombo as $value): ?>
-											<option value="<?php echo $value['projectId']; ?>" <?php echo set_select('inputProjectName', $value['projectId'], (!empty($formData->projectId) && $formData->projectId == $value['projectId']? TRUE : FALSE )); ?>>
-													<?php echo $value['projectNameAlias']; ?>: <?php echo $value['projectName']; ?>
-											</option>
-										<?php endforeach; ?>
+	            						<?php foreach($projectCombo as $value): ?>
+	            								<option value="<?php echo $value['projectId']; ?>" <?php echo set_select('inputProjectName', $value['projectId'], ( !empty($formData->projectId) && $formData->projectId == $value['projectId'] ? TRUE : FALSE )); ?>>
+	            									<?php echo $value['projectNameAlias']; ?>: <?php echo $value['projectName']; ?>
+	        									</option>
+	            						<?php endforeach; ?>
 										<?php } ?>
 										<!-- <option selected="selected">Alabama</option> -->
 					                </select>
 					                <?php echo form_error('inputProjectName', '<font color="red">','</font><br>'); ?>
 	            				</div>
 		            		</div>
-		            		<div class="form-group">
 	        					<!-- <div class="col-sm-6"> 
 	        						<label for="inputStatus">Functional Requirements Status: </label>
 	            					&nbsp;&nbsp;&nbsp;
@@ -54,6 +53,7 @@
 					                	All
 					                </label>
 	        					</div> -->
+		            		<div class="form-group">
 	        					<div class="col-sm-12">
 	        						<div align="right">
 	        							<button type="button" class="btn bg-olive" style="width: 100px;" onclick="doOpenAddMoreScreen();">

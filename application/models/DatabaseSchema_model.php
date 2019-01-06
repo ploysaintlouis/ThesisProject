@@ -46,6 +46,7 @@ class DatabaseSchema_model extends CI_Model{
 			FROM M_DATABASE_SCHEMA_INFO di , M_DATABASE_SCHEMA_VERSION dv,M_USERS u
 			WHERE $where_clause
 			AND dv.projectid = di.projectid
+			AND dv.schemaVersionId = di.schemaVersionId
 			AND dv.createUser = u.username
 			ORDER BY di.tableName, di.columnName,dv.schemaVersionNumber ";
 
@@ -146,7 +147,7 @@ class DatabaseSchema_model extends CI_Model{
 
 		$previousSchemaVersionId = (empty($param->previousVersionId)? "NULL": $param->previousVersionId);
 
-		$sqlStr = "INSERT INTO M_DATABASE_SCHEMA_VERSION (projectId, tableName, columnName, schemaVersionNumber, effectiveStartDate, effectiveEndDate, activeFlag, previousSchemaVersionId, createDate, createUser, updateDate, updateUser) VALUES ($param->projectId, '{$param->tableName}', '{$param->columnName}', {$param->schemaVersionNo}, '$currentDateTime', NULL, '{$param->status}', $previousSchemaVersionId, '$currentDateTime', '$user', '$currentDateTime', '$user')";
+		$sqlStr = "INSERT INTO M_DATABASE_SCHEMA_VERSION (projectId, tableName, columnName, schemaVersionNumber, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ($param->projectId, '{$param->tableName}', '{$param->columnName}', {$param->schemaVersionNo}, '$currentDateTime', NULL, '{$param->status}', '$currentDateTime', '$user', '$currentDateTime', '$user')";
 
 		$result = $this->db->query($sqlStr);
 		if($result){

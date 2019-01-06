@@ -1,0 +1,2 @@
+functionalRequirementId,functionalRequirementDescription,typeData,dataName,dataType,dataLength,referTableName,referColumnName
+OS_FR_01,Add A New Product Information,input,Product Id,,,products,product_id

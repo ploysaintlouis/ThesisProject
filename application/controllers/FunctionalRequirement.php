@@ -77,14 +77,13 @@ class FunctionalRequirement extends CI_Controller {
 		$data['hfield'] = $hfield;
 		$data['error_message'] = $errorMessage;
 		$this->openView($data, 'upload');
-		echo $screenMode;
+		
 	}
 
-	public function doUpload(){
-		//$fileName = $_FILES['fileName']['name']."_".$this->session->session_id;
-	
+	public function doUpload(){	
 		$fileName = "FN_".date("YmdHis")."_".$this->session->session_id;
-	  	$config['upload_path'] = './uploads/';
+	  	
+		$config['upload_path'] = './uploads/';
 	    $config['allowed_types'] = 'csv';
 	    $config['file_name'] = $fileName;
 	    $config['max_size']  = '5000';
@@ -122,7 +121,7 @@ class FunctionalRequirement extends CI_Controller {
 			
        		foreach($result as $value){
        			++$lineNo;
-       			$inputId = '';
+       			$dataId = '';
        			$errorFlag = FALSE;	
        			$hasDataLength = FALSE;
        			$hasScalePoint = FALSE;
@@ -179,7 +178,7 @@ class FunctionalRequirement extends CI_Controller {
        			}
 
        			/*--------------------------[DETAIL]---------------------------*/
-       			/**************************[INPUT NAME]*************************/
+       			/**************************[DATA NAME]*************************/
        			//Check Input Name not null
        			if($this->checkNullOrEmpty($value[KEY_FR_INPUT_NAME])){
        				$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_008', $lineNo);
@@ -222,8 +221,9 @@ class FunctionalRequirement extends CI_Controller {
 		       					$hasTableName = TRUE;
 		       				}
 		       			}else{
-		       				$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_026', $lineNo);
-							$errorFlag = TRUE;
+		       			//	$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_026', $lineNo);
+							//$errorFlag = TRUE;
+							$hasTableName = false;
 		       			}
 
 		       			/*************************[FIELD NAME of DB TARGET]************************/
@@ -235,8 +235,9 @@ class FunctionalRequirement extends CI_Controller {
 		       					$hasColumnName = TRUE;
 		       				}
 		       			}else{
-		       				$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_028', $lineNo);
-							$errorFlag = TRUE;
+		       				//$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_028', $lineNo);
+							//$errorFlag = TRUE;
+							$hasColumnName = false;
 		       			}
 
 		       			//Check exist Table and Column Name in Database
@@ -259,14 +260,31 @@ class FunctionalRequirement extends CI_Controller {
 
        			if($errorFlag == FALSE){
        				$correctRecord++;
-
-       				$funtionalRequirementsList[] = (object) array(
+       				/*$funtionalRequirementsList[] = (object) array(
        					'projectId' => $projectId, 
 	    				'functionNo' => $value[KEY_FR_NO], 
 	    				'functionDescription' => $value[KEY_FR_DESC], 
 	    				'functionVersionNo' => INITIAL_VERSION,
 	    				'inputId' => $inputId,
 	    				'inputName' => $value[KEY_FR_INPUT_NAME],
+	    				'referTableName' => strtoupper($value[KEY_FR_INPUT_TABLE_NAME]),
+	    				'referColumnName' => strtoupper($value[KEY_FR_INPUT_FIELD_NAME]),
+	    				'schemaVersionId' => '',
+	    				'effectiveStartDate' => '',
+	    				'effectiveEndDate' => '',
+	    				'activeFlag' => ACTIVE_CODE,
+	    				'user' => $user);
+       			}*/
+       				$funtionalRequirementsList[] = (object) array(
+       					'projectId' => $projectId, 
+	    				'functionNo' => $value[KEY_FR_NO], 
+	    				'functionDescription' => $value[KEY_FR_DESC], 
+	    				'functionVersionNo' => INITIAL_VERSION,
+						'typeData' => $value[KEY_FR_TYPEDATE],
+	    				'dataId' => $dataId,
+	    				'dataName' => $value[KEY_FR_INPUT_NAME],
+						'dataType' =>  $value[KEY_FR_INPUT_TYPE],
+						'dataLength' =>  $value[KEY_FR_INPUT_LENGTH],
 	    				'referTableName' => strtoupper($value[KEY_FR_INPUT_TABLE_NAME]),
 	    				'referColumnName' => strtoupper($value[KEY_FR_INPUT_FIELD_NAME]),
 	    				'schemaVersionId' => '',

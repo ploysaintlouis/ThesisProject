@@ -394,15 +394,17 @@ class FunctionalRequirement_model extends CI_Model {
 		return NULL;
 	}
 
-	function insertFRInput($param){
+	function insertFRInput($functionId,$param){
 		$currentDateTime = date('Y-m-d H:i:s');
 		/*$sqlStr = "INSERT INTO M_FN_REQ_INPUT (projectId, inputName, refTableName, refColumnName, createDate, createUser, updateDate, updateUser) VALUES ({$param->projectId}, '{$param->inputName}', '{$param->referTableName}', '{$param->referColumnName}', '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}')";
 		*/
 		$sqlStr = " INSERT INTO M_FN_REQ_DETAIL (projectId,typeData,dataName,refTableName,refColumnName,
-		 createDate,createUser,updateDate,updateUser)
-		 VALUES ({{$param->projectId},'{$param->typeData}', '{$param->dataName}', '{$param->referTableName}',
+		 createDate,createUser,updateDate,updateUser,functionId,functionNo,schemaVersionId,dataType,
+		 effectiveStartDate,effectiveEndDate)
+		 VALUES ('{$param->projectId}','{$param->typeData}', '{$param->dataName}', '{$param->referTableName}',
 		 '{$param->referColumnName}', '$currentDateTime', '{$param->user}', '$currentDateTime', 
-		 '{$param->user}')";
+		 '{$param->user}',$functionId,'$param->functionVersionNo','$param->schemaVersionId','$param->dataType',
+		 '$param->effectiveStartDate','$param->effectiveEndDate')";
 		//var_dump($sqlStr);
 		$result = $this->db->query($sqlStr);
 		if($result){
@@ -528,21 +530,46 @@ class FunctionalRequirement_model extends CI_Model {
 
 			//insert Functional Requirement Detail
 			foreach ($param as $detail) {
-				$inputId = '';
+				$dataId = '';
 				//Check Exist Input
-				if(empty($detail->inputId)){
+				if(empty($detail->dataId)){
 					//Insert New Input
-					$inputId = $this->insertFRInput($detail);
-					$detail->inputId = $inputId;
-				}
+					if ($detail->typeData == 'input'){
+						$detail->typeData = '1';
+					}
+					if ($detail->typeData == 'output'){
+						$detail->typeData = '2';
+					}
+					$detail->functionVersionNo = $param[0]->functionVersionNo;
 
+					$resultSchemaInfo = $this->searchReferenceDatabaseSchemaInfo($detail);
+
+				if ((null == $detail->dataType) && (null == $detail->dataLength)) {
+					$detail->dataType = $resultSchemaInfo->dataType;
+					$detail->dataLength = $resultSchemaInfo->dataLength;
+					$detail->decimalPoint = $resultSchemaInfo->decimalPoint;
+					$detail->constraintPrimaryKey = $resultSchemaInfo->constraintPrimaryKey;
+					$detail->constraintUnique = $resultSchemaInfo->constraintUnique;
+					$detail->constraintDefault = $resultSchemaInfo->constraintDefault;
+					$detail->constraintNull = $resultSchemaInfo->constraintNull;
+					$detail->constraintMinValue = $resultSchemaInfo->constraintMinValue;
+					$detail->constraintMaxValue = $resultSchemaInfo->constraintMaxValue;
+					$detail->schemaVersionId = $resultSchemaInfo->schemaVersionId;
+				}
+					$detail->effectiveStartDate = $effectiveStartDate;
+					$detail->effectiveEndDate = "NULL";
+
+					$inputId = $this->insertFRInput($functionId,$detail);
+					$detail->dataId = $dataId;
+				}
+/*
 				$resultSchemaInfo = $this->searchReferenceDatabaseSchemaInfo($detail);
 
 				$detail->schemaVersionId = $resultSchemaInfo->schemaVersionId;
 				$detail->effectiveStartDate = $effectiveStartDate;
 				$detail->effectiveEndDate = "NULL";
-
-				$resultInsertDetail = $this->insertFRDetail($functionId, $detail);
+*/
+				//$resultInsertDetail = $this->insertFRDetail($functionId, $detail);
 			}// end foreach
 		}// end if
 

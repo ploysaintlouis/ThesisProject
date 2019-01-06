@@ -135,7 +135,7 @@
 	                							<th>Max</th>
 	                							<th>Table</th>
 	                							<th>Column</th>
-	                							<th>
+	                							<th> 
 	                							<!-- <a href="#"><span class="label label-success">Add new input</span></a> -->
 	                								<button type="button" name="addBtn" id="addBtn" class="btn btn-success btn-xs addInput" >Add new Input/Output</button>
 	                							</th>
@@ -185,8 +185,9 @@
                 									<?php echo $value['refTableName']; ?>
                 								</td>
                 								<td>
-                									<?php echo $value['refColumnName']; ?>
+                									<?php echo $value['refColumnName']; ?> 
                 								</td>
+												
                 								<td>
                 									<?php $keyId = $projectInfo->projectId."|".$value['dataId']."|".$value['schemaVersionId']."|".$hfield['functionId']."|".$value['typeData']; ?>
 													

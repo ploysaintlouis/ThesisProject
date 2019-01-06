@@ -250,7 +250,7 @@ class Project extends CI_Controller {
 	}
 
 	//Validate
-	private function validateStartProject($projectId, &$error_message){
+	/*private function validateStartProject($projectId, &$error_message){
 		
 		$countFR = $this->mFR->searchExistFunctionalRequirement('', $projectId);
 		if(0 == count($countFR)){
@@ -266,6 +266,27 @@ class Project extends CI_Controller {
 
 		$countRTM = $this->mRTM->searchExistRTMVersion($projectId);
 		if(0 == count($countRTM)){
+			$error_message = ER_IMP_056;
+			return FALSE;
+		}
+		return TRUE;
+	}*/
+	private function validateStartProject($projectId, &$error_message){
+		
+		$countFR = $this->mFR->searchExistFunctionalRequirement('', $projectId);
+		if(0 != count($countFR)){
+			$error_message = ER_IMP_054;
+			return FALSE;
+		}
+
+		$countTC = $this->mTestCase->searchExistTestCaseHeader($projectId, '');
+		if(0 != count($countTC)){
+			$error_message = ER_IMP_055;
+			return FALSE;
+		}
+
+		$countRTM = $this->mRTM->searchExistRTMVersion($projectId);
+		if(0 != count($countRTM)){
 			$error_message = ER_IMP_056;
 			return FALSE;
 		}

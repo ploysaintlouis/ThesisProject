@@ -128,7 +128,7 @@
 			                		<tr>
 			                			<td><?php echo $value['projectName']; ?></td>
 			                			<td><?php echo $value['projectNameAlias']; ?></td>
-			                			<td><?php echo $value['startDate']; ?></td>
+			                			<td><?php echo $value['effDate']; ?></td>
 			                			<td><?php echo $value['endDate']; ?></td>
 			                			<td><?php echo $value['customer']; ?></td>
 			                			<td style="text-align: left;">

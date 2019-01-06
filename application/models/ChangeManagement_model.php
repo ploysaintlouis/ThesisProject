@@ -134,13 +134,12 @@ class ChangeManagement_model extends CI_Model{
 		$tableName = !empty($param->table)? "'".$param->table."'" : "NULL";
 		$columnName = !empty($param->column)? "'".$param->column."'" : "NULL";
 
-		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion,typeData, dataId, dataName, schemaVersionId, newDataType, newDataLength, newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate) 
+		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion,typeData, dataName, schemaVersionId, newDataType, newDataLength, newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate) 
 			VALUES (
 				$param->userId, 
 				$param->functionId,
 				$param->functionVersion,
 				$param->typeData,
-				$param->dataId,
 				$param->dataName,
 				$schemaVersionId,
 				$dataType,

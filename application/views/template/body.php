@@ -58,6 +58,7 @@
 				var projectId = $('input[name=projectId]').val();
 				var functionId = $('input[name=functionId]').val();
 				var functionVersion = $('input[name=functionVersion]').val();
+				var schemaVersionId = $('input[name=schemaVersionId]').val();
 
 				$.ajax({
 					url:"<?php echo base_url(); ?>index.php/ChangeManagement/addFRInputDetail/",
@@ -65,27 +66,8 @@
 					data:{
 						projectId: projectId, 
 						functionId: functionId, 
-						functionVersion: functionVersion
-					},
-					success:function(data){
-						$('#edit_input_modal').modal('show');
-						$('#input_detail').html(data);
-					}
-				});
-			});
-
-			$(document).on('click', '.addOutput', function(){
-				var projectId = $('input[name=projectId]').val();
-				var functionId = $('input[name=functionId]').val();
-				var functionVersion = $('input[name=functionVersion]').val();
-
-				$.ajax({
-					url:"<?php echo base_url(); ?>index.php/ChangeManagement/addFRInputDetail/",
-					method:"POST",
-					data:{
-						projectId: projectId, 
-						functionId: functionId, 
-						functionVersion: functionVersion
+						functionVersion: functionVersion,
+						schemaVersionId: schemaVersionId
 					},
 					success:function(data){
 						$('#edit_input_modal').modal('show');
@@ -149,7 +131,7 @@
 					}
 				}else{
 					if($('#inputDataType').val() == "" 
-						|| $('#inputName').val() == "" 
+						|| $('#dataName').val() == "" 
 						|| $('#inputTableName').val() == "" 
 						|| $('#inputColumnName').val() == ""){
 						alert("Please enter all required fields.");
@@ -176,13 +158,16 @@
      							$('#inputChangeListTbl').html(data);  
 							}
 						}else{
+							
 							alert("There is a problem when save data, Please try to save again.");
 							return false; 
 						}
 					},
 					error: function(){ 
-						alert("There is a problem when save data, Please try to save again.");
-						return false; 
+			//			alert("There is a problem when save data, Please try to save again.");
+								alert("ploy");
+					//	return false; 
+					return true;
 					}
 				});
 			});

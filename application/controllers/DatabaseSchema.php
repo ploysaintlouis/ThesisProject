@@ -90,8 +90,6 @@ class DatabaseSchema extends CI_Controller{
 		$projectNameAlias = $this->input->post('projectNameAlias');
 		$screenMode = $this->input->post('screenMode');
 
-echo $config;
-
 		$this->load->library('upload', $config);
 
 		if($this->upload->do_upload('fileName') == FALSE){
@@ -102,14 +100,13 @@ echo $config;
 			$fullPath = $data['upload_data']['full_path'];
 	    	$this->load->library('csvreader');
        	    $result =  $this->csvreader->parse_file($fullPath);//path to csv file
-
+//echo $fullPath;
     		//Validate data in File
     		if(0 < count($result)){
     			$totalRecord = count($result);
     			$correctRecord = 0;
        		    $incorrectRecord = 0;
        		    $databaseSchemaList = array();
-
 
            		if($this->validate($result, $uploadResult, $correctRecord, $projectId)){
 					
@@ -170,7 +167,7 @@ echo $config;
 		$lineNo = 0;
 		$checkTableName = '';
 		$checkColumnName = '';
-
+//echo $projectId;
 		foreach($data as $value){
    			++$lineNo;
    			
@@ -180,7 +177,7 @@ echo $config;
 
    			$scalePoint = 0;
 
-   			if(NUMBER_OF_UPLOADED_COLUMN_DB != count($value)){
+			if(NUMBER_OF_UPLOADED_COLUMN_DB != count($value)){
    				$uploadResult = $this->appendThings($uploadResult, 'ER_IMP_004', $lineNo);
    				continue;
    			}
@@ -223,7 +220,7 @@ echo $config;
    				}else{
    					$checkColumnName = $value[KEY_DB_COLUMN_NAME];
    				}
-
+//echo $projectId;
    				//Check duplicate Table and Column in Database
    				if(!empty($value[KEY_DB_TABLE_NAME] && !empty($value[KEY_DB_COLUMN_NAME]))){
    					$result = $this->mDbSchema->searchExistDatabaseSchemaInfo($value[KEY_DB_TABLE_NAME], $value[KEY_DB_COLUMN_NAME], $projectId);
@@ -250,7 +247,8 @@ echo $config;
    			/**************************[DATA TYPE]**************************/
    			$typeIsMatch = FALSE;
    			$dataType = '';
-   			if($this->checkNullOrEmpty($value[KEY_FR_INPUT_TYPE])){
+
+			if($this->checkNullOrEmpty($value[KEY_FR_INPUT_TYPE])){
    				$uploadResult = $this->appendThings($uploadResult, 'ER_IMP_011', $lineNo);
    				$hasError = TRUE;
    			}else{

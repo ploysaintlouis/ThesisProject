@@ -17,11 +17,11 @@ class Project_model extends CI_Model {
 		}
 		if(isset($startDateFrom) && $startDateFrom != "" && !empty($startDateFrom)){
 			$date = DateTime::createFromFormat($format, $startDateFrom);
-			$where[] = "startDate >= '".$date->format('Y-m-d')."'";
+			$where[] = "effDate >= '".$date->format('Y-m-d')."'";
 		}
 		if(isset($startDateTo) && $startDateTo != "" && !empty($startDateTo)){
 			$date = DateTime::createFromFormat($format, $startDateTo);
-			$where[] = "startDate <= '".$date->format('Y-m-d')."'";
+			$where[] = "effDate <= '".$date->format('Y-m-d')."'";
 		}
 		if(isset($endDateFrom) && $endDateFrom != "" && !empty($endDateFrom)){
 			$date = DateTime::createFromFormat($format, $endDateFrom);
@@ -36,7 +36,7 @@ class Project_model extends CI_Model {
 		}
 		
 		$where_clause = implode(' AND ', $where);
-		$queryStr = "SELECT projectId, projectName, projectNameAlias, startDate, endDate, customer FROM M_PROJECT 
+		$queryStr = "SELECT projectId, projectName, projectNameAlias, effDate, endDate, customer FROM M_PROJECT 
 			WHERE $where_clause 
 			ORDER BY projectName";
 		//echo $queryStr."<br/>";
@@ -100,7 +100,7 @@ class Project_model extends CI_Model {
 		$result = null;
 		$currentDateTime = date('Y-m-d H:i:s');
 
-		$sql = "INSERT INTO M_PROJECT (projectName, projectNameAlias, startDate, endDate, customer, createDate, createUser, updateDate, updateUser, activeFlag, databaseName, hostname, port, username, password) VALUES ('{$param->projectName}', '{$param->projectAlias}', '".$param->startDate->format('Y-m-d')."', '".$param->endDate->format('Y-m-d')."', '$param->customer', '$currentDateTime', '$param->user', '$currentDateTime', '$param->user', '".ACTIVE_CODE."', '$param->databaseName', '$param->hostname', '$param->port', '$param->username', '$param->password')";
+		$sql = "INSERT INTO M_PROJECT (projectName, projectNameAlias, effDate, endDate, customer, createDate, createUser, updateDate, updateUser, activeFlag, databaseName, hostname, port, username, password) VALUES ('{$param->projectName}', '{$param->projectAlias}', '".$param->startDate->format('Y-m-d')."', '".$param->endDate->format('Y-m-d')."', '$param->customer', '$currentDateTime', '$param->user', '$currentDateTime', '$param->user', '".ACTIVE_CODE."', '$param->databaseName', '$param->hostname', '$param->port', '$param->username', '$param->password')";
 		$insertResult = $this->db->query($sql);
 		if($insertResult){
 			$query = $this->db->query("SELECT IDENT_CURRENT('M_PROJECT') as last_id");
@@ -108,6 +108,10 @@ class Project_model extends CI_Model {
 			
 			$param->projectId = $result[0]->last_id;
 		}
+
+			$str = "insert into M_SCHEMA_ID
+					values ({$param->projectId},'1','1') ";
+			$resultstr = $this->db->query($str);	
 
 		$this->db->trans_complete();
     	$trans_status = $this->db->trans_status();
@@ -128,7 +132,7 @@ class Project_model extends CI_Model {
 
 		$sql = "UPDATE [M_PROJECT] 
 			SET projectNameAlias = '{$param->projectAlias}', 
-				startDate = '{$param->startDate->format('Y-m-d')}', 
+				effDate = '{$param->startDate->format('Y-m-d')}', 
 				endDate = '{$param->endDate->format('Y-m-d')}', 
 				customer = '{$param->customer}',
 				databaseName = '{$param->databaseName}',
@@ -154,12 +158,17 @@ class Project_model extends CI_Model {
 
 	function updateProjectInformation_byStartFlag($param){
 		$currentDateTime = date('Y-m-d H:i:s');
+		/*$sql = "UPDATE [M_PROJECT] 
+			SET startFlag = '1',
+				updateDate = '{$currentDateTime}', 
+				updateUser = '{$param->user}' 
+			WHERE projectId = {$param->projectId}";
+			*/
 		$sql = "UPDATE [M_PROJECT] 
 			SET startFlag = '1',
 				updateDate = '{$currentDateTime}', 
 				updateUser = '{$param->user}' 
 			WHERE projectId = {$param->projectId}";
-
 		$this->db->query($sql);
 		return $this->db->affected_rows();
 	}
