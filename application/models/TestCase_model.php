@@ -137,7 +137,9 @@ class TestCase_model extends CI_Model{
 	function insertTestCaseVersion($param, $user){
 		$currentDateTime = date('Y-m-d H:i:s');
 		$previousVersionId = !empty($param->previousVersionId)? $param->previousVersionId : "NULL";
-		$sqlStr = "INSERT INTO M_TESTCASE_VERSION (testCaseId, testCaseVersionNumber, effectiveStartDate, effectiveEndDate, previousVersionId, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseId}', '{$param->initialVersionNo}', '{$param->effectiveStartDate}', NULL, $previousVersionId, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
+		/*$sqlStr = "INSERT INTO M_TESTCASE_VERSION (testCaseId, testCaseVersionNumber, effectiveStartDate, effectiveEndDate, previousVersionId, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseId}', '{$param->initialVersionNo}', '{$param->effectiveStartDate}', NULL, $previousVersionId, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
+		*/
+		$sqlStr = "INSERT INTO M_TESTCASE_VERSION (testCaseVersionNumber,testCaseVersion, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseNo}', '{$param->initialVersionNo}', '{$param->effectiveStartDate}', NULL, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}

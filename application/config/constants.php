@@ -156,7 +156,8 @@ define('ER_MSG_019', 'Cancel process failed: {0} Error, Please try to save again
 //define('NUMBER_OF_UPLOADED_COLUMN_FR', 6);
 define('NUMBER_OF_UPLOADED_COLUMN_FR', 8);
 define('NUMBER_OF_UPLOADED_COLUMN_DB', 12);
-define('NUMBER_OF_UPLOADED_COLUMN_TC', 6);
+//define('NUMBER_OF_UPLOADED_COLUMN_TC', 6);
+define('NUMBER_OF_UPLOADED_COLUMN_TC', 7);
 define('NUMBER_OF_UPLOADED_COLUMN_RTM', 3);
 define('KEY_FR_NO', 'functionalRequirementId');
 define('KEY_FR_DESC', 'functionalRequirementDescription');
@@ -179,7 +180,8 @@ define('KEY_FR_TYPEDATE','typeData');
 define('KEY_TC_TESTCASE_NO', 'TestCaseID');
 define('KEY_TC_TESTCASE_DESC', 'TestCaseDescription');
 define('KEY_TC_EXPECTED_RESULT', 'ExpectedResult');
-define('KEY_TC_INPUT_NAME', 'InputName');
+define('KEY_TC_INPUT_NAME', 'dataName');
+define('KEY_TC_TYPEDATA', 'typeData');
 define('KEY_TC_TEST_DATA', 'TestData');
 
 define('KEY_FR_ID', 'FunctionalRequirementID');

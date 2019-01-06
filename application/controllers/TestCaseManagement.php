@@ -218,7 +218,7 @@ class TestCaseManagement extends CI_Controller{
    					$uploadResult = $this->appendThings($uploadResult, 'ER_IMP_048', $lineNo);
 					$hasError = TRUE;
    				}else{
-   					$refInputId = $result->inputId;
+   					$refdataId = $result->dataId;
    				}
    			}
 
@@ -239,7 +239,7 @@ class TestCaseManagement extends CI_Controller{
 
    			if(!$hasError){
    				$correctRecord++;
-   				$testCaseInfoList[] = (object) array(
+   			/*	$testCaseInfoList[] = (object) array(
    					'testCaseId' => '',
    					'testCaseNo' => $value[KEY_TC_TESTCASE_NO],
    					'testCaseDescription' => $value[KEY_TC_TESTCASE_DESC],
@@ -247,6 +247,21 @@ class TestCaseManagement extends CI_Controller{
    					'projectId' => $projectId,
    					'refInputId' => $refInputId,
    					'refInputName' => $value[KEY_TC_INPUT_NAME],
+   					'testData' => $value[KEY_TC_TEST_DATA],
+   					'effectiveStartDate' => '',
+   					'initialVersionNo' => INITIAL_VERSION,
+    	       		'activeStatus' => ACTIVE_CODE
+   				);
+				*/
+				$testCaseInfoList[] = (object) array(
+   					'testCaseId' => '',
+   					'testCaseNo' => $value[KEY_TC_TESTCASE_NO],
+   					'testCaseDescription' => $value[KEY_TC_TESTCASE_DESC],
+   					'expectedResult' => $value[KEY_TC_EXPECTED_RESULT],
+   					'projectId' => $projectId,
+   					'refdataId' => $refdataId,
+					'typeData' => $value[KEY_TC_TYPEDATA],
+   					'refdataName' => $value[KEY_TC_INPUT_NAME],
    					'testData' => $value[KEY_TC_TEST_DATA],
    					'effectiveStartDate' => '',
    					'initialVersionNo' => INITIAL_VERSION,

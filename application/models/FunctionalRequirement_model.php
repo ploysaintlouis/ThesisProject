@@ -370,7 +370,8 @@ class FunctionalRequirement_model extends CI_Model {
 
 	function insertFRHeader($param){
 		$currentDateTime = date('Y-m-d H:i:s');
-		$sqlStr = "INSERT INTO M_FN_REQ_HEADER (functionNo, functionDescription, projectId, createDate, createUser, updateDate, updateUser) VALUES ('{$param->functionNo}', '{$param->functionDescription}', {$param->projectId}, '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}')";
+	/*	$sqlStr = "INSERT INTO M_FN_REQ_HEADER (functionNo, functionDescription, projectId, createDate, createUser, updateDate, updateUser) VALUES ('{$param->functionNo}', '{$param->functionDescription}', {$param->projectId}, '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}')";*/
+		$sqlStr = "INSERT INTO M_FN_REQ_HEADER (functionNo, functionDescription, projectId, createDate, createUser, updateDate, updateUser,functionversion) VALUES ('{$param->functionNo}', '{$param->functionDescription}', {$param->projectId}, '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}','1')";
 		$result = $this->db->query($sqlStr);
 		if($result){
 			$query = $this->db->query("SELECT IDENT_CURRENT('M_FN_REQ_HEADER') as last_id");
@@ -400,11 +401,11 @@ class FunctionalRequirement_model extends CI_Model {
 		*/
 		$sqlStr = " INSERT INTO M_FN_REQ_DETAIL (projectId,typeData,dataName,refTableName,refColumnName,
 		 createDate,createUser,updateDate,updateUser,functionId,functionNo,schemaVersionId,dataType,
-		 effectiveStartDate,effectiveEndDate)
+		 effectiveStartDate,effectiveEndDate,activeFlag,functionVersion)
 		 VALUES ('{$param->projectId}','{$param->typeData}', '{$param->dataName}', '{$param->referTableName}',
 		 '{$param->referColumnName}', '$currentDateTime', '{$param->user}', '$currentDateTime', 
-		 '{$param->user}',$functionId,'$param->functionVersionNo','$param->schemaVersionId','$param->dataType',
-		 '$param->effectiveStartDate','$param->effectiveEndDate')";
+		 '{$param->user}','$functionId','$param->functionNo','$param->schemaVersionId','$param->dataType',
+		 '$currentDateTime',NULL,'1','1')";
 		//var_dump($sqlStr);
 		$result = $this->db->query($sqlStr);
 		if($result){
