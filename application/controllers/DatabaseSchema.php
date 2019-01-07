@@ -193,7 +193,8 @@ class DatabaseSchema extends CI_Controller{
    					$hasError = TRUE;
    				}
 
-   				//Check whether be the same table name
+				   //Check whether be the same table name
+
    				if(!empty($checkTableName) && $checkTableName != $value[KEY_DB_TABLE_NAME]){
    					$uploadResult = $this->appendThings($uploadResult, 'ER_IMP_031', $lineNo);
    					$hasError = TRUE;

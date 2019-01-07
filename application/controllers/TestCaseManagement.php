@@ -201,7 +201,7 @@ class TestCaseManagement extends CI_Controller{
    				}
    			}
 
-   			/**********************************[Input Name]*****************************/
+   			/**********************************[data Name]*****************************/
    			if($this->checkNullOrEmpty($value[KEY_TC_INPUT_NAME])){
 				$uploadResult = $this->appendThings($uploadResult, 'ER_IMP_046', $lineNo);
 				$hasError = TRUE;
@@ -212,7 +212,7 @@ class TestCaseManagement extends CI_Controller{
    				}else{
    					$checkInputName = $value[KEY_TC_INPUT_NAME];
    				}
-
+echo $value['typeData'];
    				$result = $this->mRequirement->searchFRInputInformation($projectId, $value[KEY_TC_INPUT_NAME], ACTIVE_CODE);
    				if(null == $result || empty($result)){
    					$uploadResult = $this->appendThings($uploadResult, 'ER_IMP_048', $lineNo);

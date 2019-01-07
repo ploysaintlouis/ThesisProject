@@ -129,7 +129,13 @@ class TestCase_model extends CI_Model{
 
 	function insertTestCaseDetail($param, $user){
 		$currentDateTime = date('Y-m-d H:i:s');
-		$sqlStr = "INSERT INTO M_TESTCASE_DETAIL (testCaseId, refInputId, refInputName, refOutputId, refOutputName, testData, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseId}', {$param->refInputId}, '{$param->refInputName}', {$param->refOutputId}, '{$param->refOutputName}', '{$param->testData}', '{$param->effectiveStartDate}', NULL, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
+		
+	//	$sqlStr = "INSERT INTO M_TESTCASE_DETAIL (testCaseId, refInputId, refInputName, refOutputId, refOutputName, testData, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseId}', {$param->refInputId}, '{$param->refInputName}', {$param->refOutputId}, '{$param->refOutputName}', '{$param->testData}', '{$param->effectiveStartDate}', NULL, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
+		$sqlStr = "INSERT INTO M_TESTCASE_DETAIL (testCaseId, typeData, refdataId, refdataName, testData, effectiveStartDate, 
+		effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser,projectId,testCaseNo,testcaseVersion) 
+		VALUES ('{$param->testCaseId}','{$param->typeData}', '{$param->refdataId}', '{$param->refdataName}', '{$param->testData}', '{$param->effectiveStartDate}', 
+		NULL, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user','{$param->projectId}','{$param->testCaseNo}', '{$param->initialVersionNo}')";
+
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}
@@ -249,14 +255,23 @@ class TestCase_model extends CI_Model{
 			$testCaseId = $this->insertTestCaseHeader($param[0], $user);
 			
 			//Insert new Test Case Version
+
+
 			$param[0]->testCaseId = $testCaseId;
 			$param[0]->effectiveStartDate = $effectiveStartDate;
 			$this->insertTestCaseVersion($param[0], $user);
 		}
-
+		
 		//Insert new Test Case Details
 		if(null != $testCaseId && !empty($testCaseId)){
 			foreach ($param as $value){
+				if ($value->typeData == 'input'){
+					$value->typeData  = '1';
+				}
+				if ($value->typeData == 'output'){
+					$value->typeData  = '2';
+				}	
+
 				$value->testCaseId = $testCaseId;
 				$value->effectiveStartDate = $effectiveStartDate;
 

@@ -154,7 +154,7 @@ define('ER_MSG_019', 'Cancel process failed: {0} Error, Please try to save again
 
 //**KEY COLUMN FOR UPLOAD FUNCTIONAL REQUIREMENT
 //define('NUMBER_OF_UPLOADED_COLUMN_FR', 6);
-define('NUMBER_OF_UPLOADED_COLUMN_FR', 8);
+define('NUMBER_OF_UPLOADED_COLUMN_FR', 9);
 define('NUMBER_OF_UPLOADED_COLUMN_DB', 12);
 //define('NUMBER_OF_UPLOADED_COLUMN_TC', 6);
 define('NUMBER_OF_UPLOADED_COLUMN_TC', 7);

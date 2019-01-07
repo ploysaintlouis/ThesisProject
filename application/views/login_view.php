@@ -2,7 +2,7 @@
 <html class="full" lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>VCS | Version Control System 0.1</title>
+	<title>VCS | Version Control System 1.0</title>
 	<link rel="icon" href="<?=base_url()?>/favicon.png" type="image">
 
  	<!-- Tell the browser to be responsive to screen width -->
@@ -28,7 +28,7 @@
 	<div class="container">
 		<div class="login-box">
 			<div class="login-logo">
-				<b>VCS</b> Version 0.1</a>
+				<b>VCS</b> Version 1.0</a>
 			</div>
 		  	<!-- /.login-logo -->
 		  	<div class="login-box-body">

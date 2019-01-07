@@ -1,0 +1,4 @@
+projectId,tableName,columnName,primaryKey,dataType,dataLength,decimalPoint,unique,defaultValue,notNull,minValue,maxValue
+3,Categories,category_id,N,int,,,N,,Y,,
+3,Categories,category_name,N,varchar,100,,N,,Y,,
+3,Categories,description,N,varchar,255,,N,,Y,,

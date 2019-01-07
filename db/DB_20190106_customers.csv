@@ -1,0 +1,6 @@
+projectId,tableName,columnName,primaryKey,dataType,dataLength,decimalPoint,unique,defaultValue,notNull,minValue,maxValue
+3,Customers,custormer_id,N,int,,,N,,Y,,
+3,Customers,company_name,N,varchar,255,,N,,Y,,
+3,Customers,contact_name,N,varchar,50,,N,,Y,,
+3,Customers,contact_title,N,char,2,,N,,Y,,
+3,Customers,phone_no,N,varchar,10,,N,,Y,,

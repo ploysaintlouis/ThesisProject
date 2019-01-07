@@ -1,0 +1,6 @@
+projectId,tableName,columnName,primaryKey,dataType,dataLength,decimalPoint,unique,defaultValue,notNull,minValue,maxValue
+3,Order_Details,order_id,N,int,,,N,,Y,,
+3,Order_Details,product_id,N,int,,,N,,Y,,
+3,Order_Details,unit_price,N,decimal,18,6,N,,Y,,
+3,Order_Details,quanlity,N,int,,,N,,Y,,
+3,Order_Details,discount,N,int,,,N,,Y,,

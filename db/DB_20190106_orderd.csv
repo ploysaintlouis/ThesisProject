@@ -1,0 +1,5 @@
+projectId,tableName,columnName,primaryKey,dataType,dataLength,decimalPoint,unique,defaultValue,notNull,minValue,maxValue
+3,Orders,order_id,N,int,,,N,,Y,,
+3,Orders,customer_id,N,int,,,N,,Y,,
+3,Orders,order_date,N,date,,,N,,Y,,
+3,Orders,ship_address,N,varchar,255,,N,,Y,,

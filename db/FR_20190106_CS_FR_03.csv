@@ -1,0 +1,7 @@
+functionalRequirementId,functionalRequirementDescription,typeData,dataName,dataType,dataLength,decimalPoint,referTableName,referColumnName
+OS_FR_03,Create Order List,input,dOrder Id,,,,Order_Details,order_id
+OS_FR_03,Create Order List,input,dProduct Id,,,,Order_Details,product_id
+OS_FR_03,Create Order List,input,dUnit Price,,,,Order_Details,unit_price
+OS_FR_03,Create Order List,input,dQty,,,,Order_Details,quanlity
+OS_FR_03,Create Order List,input,dDiscount,,,,Order_Details,discount
+OS_FR_03,Create Order List,output,dPrice,decimal,18,2,,

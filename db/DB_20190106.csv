@@ -1,2 +1,8 @@
 projectId,tableName,columnName,primaryKey,dataType,dataLength,decimalPoint,unique,defaultValue,notNull,minValue,maxValue
+3,products,product_id,N,int,,,N,,Y,,
+3,products,product_name,N,varchar,50,,N,,Y,,
+3,products,category_id,N,int,,,N,,Y,,
+3,products,quanlity_per_unit,N,int,,,N,,Y,,
 3,products,unit_price,N,decimal,18,6,N,,Y,,
+3,products,unit_inStock,N,int,,,N,,Y,,
+3,products,unit_onOrder,N,int,,,N,,Y,,

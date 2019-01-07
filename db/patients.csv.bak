@@ -1,6 +1,0 @@
-"tableName","columnName","schemaVersionId","dataType","dataLength","constraintPrimaryKey","constraintUnique","constraintDefault","constraintNull","constraintMinValue","constraintMaxValue",
-"patients","p_firstname","1","VARCHAR","45","","","N","","Y","","",
-"patients","p_lastname","1","VARCHAR","45","","","N","","Y","","",
-"patients","p_birthdate","1","DATE","","","","N","","Y","","",
-"patients","p_phone","1","VARCHAR","10","","","N","","N","","",
-"patients","p_address","1","VARCHAR","100","","","N","","Y","","",

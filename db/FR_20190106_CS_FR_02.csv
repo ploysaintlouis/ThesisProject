@@ -1,0 +1,5 @@
+functionalRequirementId,functionalRequirementDescription,typeData,dataName,dataType,dataLength,decimalPoint,referTableName,referColumnName
+OS_FR_02,Create a New Order,input,Order Id,,,,Orders,order_id
+OS_FR_02,Create a New Order,input,Order Customer Id,,,,Orders,customer_id
+OS_FR_02,Create a New Order,input,Order Date,,,,Orders,order_date
+OS_FR_02,Create a New Order,input,Ship Address,,,,Orders,ship_address

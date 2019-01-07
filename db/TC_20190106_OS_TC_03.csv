@@ -1,0 +1,7 @@
+No,TestCaseID,TestCaseDescription,ExpectedResult,typeData,dataName,TestData
+1,OS_TC_03,,Valid,input,dOrder Id,34
+2,OS_TC_03,,Valid,input,dProduct Id,1
+3,OS_TC_03,,Valid,input,dUnit Price,28900
+4,OS_TC_03,,Valid,input,dQty,1
+5,OS_TC_03,,Valid,input,dDiscount,2000
+6,OS_TC_03,,Valid,output,dPrice,1000

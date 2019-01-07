@@ -1,0 +1,8 @@
+functionalRequirementId,functionalRequirementDescription,typeData,dataName,dataType,dataLength,decimalPoint,referTableName,referColumnName
+OS_FR_01,Add A New Product Information,input,Product Id,,,,products,product_id
+OS_FR_01,Add A New Product Information,input,Product Name,,,,products,product_name
+OS_FR_01,Add A New Product Information,input,Category Id,,,,products,category_id
+OS_FR_01,Add A New Product Information,input,Qty Per Unit,,,,products,quanlity_per_unit
+OS_FR_01,Add A New Product Information,input,unit Price,,,,products,unit_price
+OS_FR_01,Add A New Product Information,input,Unit in Stock,,,,products,unit_instock
+OS_FR_01,Add A New Product Information,input,Unit in Order,,,,products,unit_onOrder

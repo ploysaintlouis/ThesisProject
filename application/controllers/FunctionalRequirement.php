@@ -205,7 +205,7 @@ class FunctionalRequirement extends CI_Controller {
        						$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_030', $lineNo);
 		       				$errorFlag = TRUE;
        					}else{
-       						$inputId = $resultInputInfo->inputId;
+       						$dataId = $resultInputInfo->dataId;
        						$correctFRInput = TRUE;
        					}
        				}else{
@@ -240,20 +240,22 @@ class FunctionalRequirement extends CI_Controller {
 							$hasColumnName = false;
 		       			}
 
-		       			//Check exist Table and Column Name in Database
-		       			if($hasTableName && $hasColumnName){
-		       				$resultSchemaInfo = $this->FR->searchExistFRInputsByTableAndColumnName($value[KEY_FR_INPUT_TABLE_NAME], $value[KEY_FR_INPUT_FIELD_NAME], $projectId, ACTIVE_CODE);
-		       				if(0 < count($resultSchemaInfo)){
-		       					$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_037', $lineNo);
-		       					$errorFlag = TRUE;
-		       				}
-
-		       				$resultSchemaInfo = $this->mDbSchema->searchExistDatabaseSchemaInfo($value[KEY_FR_INPUT_TABLE_NAME], $value[KEY_FR_INPUT_FIELD_NAME], $projectId);
-		       				if(null == $resultSchemaInfo || empty($resultSchemaInfo)){
-		       					$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_038', $lineNo);
-		       					$errorFlag = TRUE;
-		       				}
-		       			}
+						   //Check exist Table and Column Name in Database
+						if ( (null == $value[KEY_FR_INPUT_TYPE]) && (null == $value[KEY_FR_INPUT_LENGTH]) ){
+							if($hasTableName && $hasColumnName){
+								$resultSchemaInfo = $this->FR->searchExistFRInputsByTableAndColumnName($value[KEY_FR_INPUT_TABLE_NAME], $value[KEY_FR_INPUT_FIELD_NAME], $projectId, ACTIVE_CODE);
+								if(0 < count($resultSchemaInfo)){
+									$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_037', $lineNo);
+									$errorFlag = TRUE;
+								}
+								
+								$resultSchemaInfo = $this->mDbSchema->searchExistDatabaseSchemaInfo($value[KEY_FR_INPUT_TABLE_NAME], $value[KEY_FR_INPUT_FIELD_NAME], $projectId);
+								if(null == $resultSchemaInfo || empty($resultSchemaInfo)){
+									$resultUpload = $this->appendThings($resultUpload, 'ER_IMP_038', $lineNo);
+									$errorFlag = TRUE;
+								}
+							}
+						}
 
        				}// end validate input
        			}// end check detail
@@ -285,6 +287,7 @@ class FunctionalRequirement extends CI_Controller {
 	    				'dataName' => $value[KEY_FR_INPUT_NAME],
 						'dataType' =>  $value[KEY_FR_INPUT_TYPE],
 						'dataLength' =>  $value[KEY_FR_INPUT_LENGTH],
+						'decimalPoint' =>  $value[KEY_FR_DECIMAL_POINT],
 	    				'referTableName' => strtoupper($value[KEY_FR_INPUT_TABLE_NAME]),
 	    				'referColumnName' => strtoupper($value[KEY_FR_INPUT_FIELD_NAME]),
 	    				'schemaVersionId' => '',

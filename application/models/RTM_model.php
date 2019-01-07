@@ -8,6 +8,8 @@ class RTM_model extends CI_Model{
 	
 	function __construct(){
 		parent::__construct();
+		$this->load->model('FunctionalRequirement_model', 'mFR');
+		$this->load->model('TestCase_model', 'mTestCase');
 	}
 
 	function searchRTMInfoByCriteria($projectId){
@@ -108,7 +110,10 @@ class RTM_model extends CI_Model{
 		$currentDateTime = date('Y-m-d H:i:s');
 		$previousVersionId = !empty($param->previousVersionId)? $param->previousVersionId : 'NULL';
 
-		$sqlStr = "INSERT INTO M_RTM_VERSION (projectId, rtmVersionNumber, effectiveStartDate, effectiveEndDate, activeFlag, previousVersionId, createDate,	createUser, updateDate, updateUser) VALUES ($param->projectId, $param->versionNo, '$param->effectiveStartDate', NULL, '$param->activeFlag', $previousVersionId, '$currentDateTime', '$user', '$currentDateTime', '$user')";
+//		$sqlStr = "INSERT INTO M_RTM_VERSION (projectId, rtmVersionNumber, effectiveStartDate, effectiveEndDate, activeFlag, previousVersionId, createDate,	createUser, updateDate, updateUser) VALUES ($param->projectId, $param->versionNo, '$param->effectiveStartDate', NULL, '$param->activeFlag', $previousVersionId, '$currentDateTime', '$user', '$currentDateTime', '$user')";
+
+		$sqlStr = "INSERT INTO M_RTM_VERSION (projectId, testCaseId,testCaseversion,functiooId,functionVersion,effectiveStartDate, effectiveEndDate, activeFlag, createDate,	createUser, updateDate, updateUser)
+		VALUES ($param->projectId, $param->testCaseId,'$param->testCaseversion','$param->functiooId','$param->functionVersion', '$param->effectiveStartDate', NULL, '$param->activeFlag', '$currentDateTime', '$user', '$currentDateTime', '$user')";
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}
@@ -170,6 +175,10 @@ class RTM_model extends CI_Model{
 		}else{
 			$effectiveStartDate = date('Y-m-d H:i:s');
 			$param[0]->effectiveStartDate = $effectiveStartDate;
+			$resultfunction = $this->mFR->searchExistFunctionalRequirement($param[0]->projectId,$param->functionId);
+			$resulttestcase = $this->mTestCase->searchExistTestCaseHeader($param[0]->projectId,$param->testCaseId);
+			$param[0]->functionVersion = $resultfunction['functionVersion'];
+			$param[0]->testCaseversion = $resulttestcase['testCaseversion'];
 			$resultInsertRTMVersion = $this->insertRTMVersion($param[0], $user);
 		}
 

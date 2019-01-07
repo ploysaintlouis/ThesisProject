@@ -1,0 +1,5 @@
+No,TestCaseID,TestCaseDescription,ExpectedResult,typeData,dataName,TestData
+1,OS_TC_02,,Valid,input,Order Id,34
+2,OS_TC_02,,Valid,input,Order Customer Id,89
+3,OS_TC_02,,Valid,input,Order Date,19-¡.¤.-17
+4,OS_TC_02,,Valid,input,Ship Address,"59 Moo.1, Thanthan Uthaithani Thailand"
