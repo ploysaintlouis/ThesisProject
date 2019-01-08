@@ -75,7 +75,7 @@
         						<span style="color:red;">*</span>:
         					</label>
         					<div class="col-sm-10">
-        						<select id="versionCombo" name="inputVersion" class="form-control select2" style="width: 100%;" value="<?php echo $testCaseVersion; ?>">
+        						<select id="testCaseVersionCombo" name="inputVersion" class="form-control select2" style="width: 100%;" value="<?php echo $testCaseVersion; ?>">
             						<option value="">--Please Select--</option>
             						<?php if(isset($testCaseVersionCombo) && 0 < count($testCaseVersionCombo)){ 
             							foreach($testCaseVersionCombo as $value){ ?>
@@ -178,7 +178,7 @@
 	                						foreach ($resultList as $value): ?>
 	                						<tr>
 	                							<td><?php echo $define++; ?></td>
-	                							<td><?php echo $value['refInputName']; ?></td>
+	                							<td><?php echo $value['refdataName']; ?></td>
 	                							<td><?php echo $value['testData']; ?></td>
 	                						</tr>
 	                					<?php endforeach; ?>

@@ -111,7 +111,8 @@ class RTM extends CI_Controller{
        		    if($resultValidate){
        		    	$user = (null != $this->session->userdata('username'))? $this->session->userdata('username'): 'userDefault';
        		    	
-       		    	//Saving data
+					   //Saving data
+					   //echo $resultValidate;
        		    	$saveResult = $this->mRTM->uploadRTM($rtmList, $user);
        		    	if($saveResult){
        		    		$successMessage = ER_MSG_009;
@@ -141,8 +142,8 @@ class RTM extends CI_Controller{
 		$lineNo = 0;
 
 		$this->load->library('common');
-
 		foreach ($data as $value) {
+			//echo $value['FunctionalRequirementID'];
 			++$lineNo;
 
 			$hasError = FALSE;
@@ -196,16 +197,19 @@ class RTM extends CI_Controller{
 
    			if(!$hasError){
    				$correctRecord++;
-
    				$rtmList[] = (object) array(
    					'projectId' => $projectId, 
-   					'functionId' => $functionId,
-   					'testCaseId' => $testCaseId,
-   					'versionNo' => INITIAL_VERSION,
-   					'effectiveStartDate' => '',
-   					'activeFlag' => ACTIVE_CODE );
-   			}
-		}
+   				//	'functionId' => $functionId,
+				//   'testCaseId' => $testCaseId,
+   					'functionId' => $value[KEY_FR_ID], 
+   					'testCaseId' => $value[KEY_TC_TESTCASE_NO], 					   
+					'functionversion' => '',
+					'testCaseversion' => '',
+					'effectiveStartDate' => '',
+					   'activeFlag' => ACTIVE_CODE 
+				);
+			}
+		}//endforeach;
 		if($correctRecord == count($data)){
    			return TRUE;
    		}else{

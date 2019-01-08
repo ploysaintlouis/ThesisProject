@@ -48,14 +48,13 @@
 	            					<select id="fnReqCombo" name="inputFnReq" class="form-control select2" style="width: 100%;" value="<?php echo $fnReqId; ?>">
 	            						<option value="">--Please Select--</option>
 	            						<?php 
-	            						if(isset($fnReqCombo) && 0 < count($fnReqCombo)){
-	            							foreach($fnReqCombo as $value){ ?>
-	            								<option value="<?php echo $value['functionId']; ?>" <?php echo set_select('inputFnReq', $value['functionId'], (!empty($fnReqId) && $fnReqId == $value['functionId']? TRUE : FALSE )); ?>>
-		            									<?php echo $value['functionNo']; ?>: <?php echo $value['functionDescription']; ?>
-		        								</option>
-	            						<?php 
-	            							} 
-	            						} ?>
+								if(null !=$fnReqCombo) { ?>
+								<?php  foreach($fnReqCombo as $value): ?>
+	            							<option value="<?php echo $value['functionId']; ?>" <?php echo set_select('inputFnReq', $value['functionId'], (!empty($fnReqId) && $fnReqId == $value['functionId']? TRUE : FALSE )); ?>>
+		            							<?php echo $value['functionNo']; ?>: <?php echo $value['functionDescription']; ?>
+		        						</option>
+									<?php endforeach; ?>
+	            						<?php 	} ?>
 	            					</select>
 	            					<?php echo form_error('inputFnReq', '<font color="red">','</font><br>'); ?>
          						</div>
@@ -64,14 +63,16 @@
          								Version
 	            						<span style="color:red;">*</span>:
 	            					</label>
-	            					<select id="versionCombo" name="inputVersion" class="form-control select2" style="width: 100%;" value="<?php echo $fnReqVersionId; ?>">
+	            					<select id="fnReqVersionCombo" name="inputVersion" class="form-control select2" style="width: 100%;" value="<?php echo $fnReqVersionId; ?>">
 	            						<option value="">--Please Select--</option>
-	            						<?php if(isset($fnReqVersionCombo) && 0 < count($fnReqVersionCombo)){ 
-	            							foreach($fnReqVersionCombo as $value){ ?>
-	            								<option value="<?php echo $value['functionVersionId']; ?>" <?php echo set_select('inputVersion', $value['functionVersionId'], (!empty($fnReqVersionId) && $fnReqVersionId == $value['functionVersionId']? TRUE : FALSE )); ?>>
-		            									<?php echo 'Version '.$value['functionVersionNumber']; ?>
-		        								</option>
-	            						<?php } } ?>
+								<?php 
+								if(null != $fnReqVersionCombo) { ?>
+	            						<?php	foreach($fnReqVersionCombo as $value): ?>
+	            							<option value="<?php echo $value['functionVersionId']; ?>" <?php echo set_select('inputVersion', $value['functionVersionId'], (!empty($fnReqVersionId) && $fnReqVersionId == $value['functionVersionId']? TRUE : FALSE )); ?>>
+		            								<?php echo 'Version '.$value['functionVersionNumber']; ?>
+		        						</option>
+									<?php endforeach; ?>
+									<?php } ?>
 	            					</select>
 	            					<?php echo form_error('inputVersion', '<font color="red">','</font><br>'); ?>
          						</div>

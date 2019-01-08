@@ -328,6 +328,34 @@ class FunctionalRequirement_model extends CI_Model {
 		ON v.refTableName = db.tableName
 		AND v.refColumnName = db.columnName
 		WHERE $where_clause
+		UNION
+		SELECT 	h.projectId,
+				h.functionId,
+				h.functionNo,
+				h.functionDescription,
+				v.functionVersion,
+				'' schemaVersionId,
+				v.typeData,
+				v.dataId,
+				V.dataName,
+				v.refTableName,
+				v.refColumnName,
+				v.dataType,
+				v.dataLength,
+				v.decimalPoint,
+				v.constraintUnique,
+				v.constraintNull,
+				v.constraintDefault,
+				v.constraintMinValue,
+				v.constraintMaxValue
+		FROM M_FN_REQ_HEADER h
+		INNER JOIN M_FN_REQ_DETAIL v
+		ON h.functionId = v.functionId
+		AND h.projectid = v.projectid
+		AND v.activeFlag = '1'
+		AND v.refTableName =''
+		AND v.refColumnName = ''
+		WHERE $where_clause
 		ORDER BY v.dataId";
 
 			//var_dump($queryStr);

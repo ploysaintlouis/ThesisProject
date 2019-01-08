@@ -197,7 +197,7 @@ class VersionManagement_model extends CI_Model{
 				th.testCaseNo, 
 				th.testCaseDescription, 
 				th.expectedResult,
-				td.refInputName, 
+				td.refdataName, 
 				td.testData
 			FROM M_TESTCASE_HEADER th
 			INNER JOIN M_TESTCASE_DETAIL td

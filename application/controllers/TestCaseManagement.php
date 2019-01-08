@@ -109,6 +109,7 @@ class TestCaseManagement extends CI_Controller{
 
        		    $resultValidate = $this->validate($result, $projectId, $uploadResult, $correctRecord, $testCaseInfoList);
        		    if($resultValidate){
+					//echo $resultValidate;
        		    	$user = (null != $this->session->userdata('username'))? $this->session->userdata('username'): 'userDefault';
 
        		    	//Saving data
@@ -212,7 +213,7 @@ class TestCaseManagement extends CI_Controller{
    				}else{
    					$checkInputName = $value[KEY_TC_INPUT_NAME];
    				}
-echo $value['typeData'];
+//echo $value['typeData'];
    				$result = $this->mRequirement->searchFRInputInformation($projectId, $value[KEY_TC_INPUT_NAME], ACTIVE_CODE);
    				if(null == $result || empty($result)){
    					$uploadResult = $this->appendThings($uploadResult, 'ER_IMP_048', $lineNo);

@@ -220,7 +220,7 @@ class ChangeManagement extends CI_Controller{
 		if(!empty($projectId) && !empty($functionId)){
 			$projectInfo = $this->mProject->searchProjectDetail($projectId);
 			$data['projectInfo'] = $projectInfo;
-
+			
 			$param = (object) array('projectId' => $projectId, 'functionId' => $functionId);
 			$resultList = $this->mFR->searchFunctionalRequirementDetail($param);
 

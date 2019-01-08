@@ -147,12 +147,14 @@
                 							<tr>
 												
                 								<td><?php echo $define++; ?></td>
-												<td>
-												<?php if ($value['typeData'] = '1') { ?>
-														<?php echo "Input"; ?> 
-												<?php } else { ?>
-														<?php echo "Output"; ?>
-												<?php }	?>
+												<?php 
+												if ($value['typeData'] == 1) { 
+													$value["typeData"] = "Input"; 
+												}
+												if ($value['typeData'] == 2) { 
+													$value["typeData"] = "Output"; 
+												}?>
+												<td><?php echo $value['typeData']; ?> 
 												</td>
                 								<td>
                 									<?php echo $value['dataName']; ?>
@@ -236,7 +238,7 @@
 			               						foreach($inputChangeList as $value): ?>
 				               					<tr>
 				               						<td><?php echo $define++; ?></td>
-													<?php if ($value['typeData'] = '1') { ?>
+													<?php if ($value['typeData']== 1) { ?>
 														<td><?php echo "Input"; ?> </td>
 													<?php } else { ?>
 														<td><?php echo "Output"; ?> </td>

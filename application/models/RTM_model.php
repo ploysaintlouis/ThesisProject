@@ -52,10 +52,12 @@ class RTM_model extends CI_Model{
 		return $result->result_array();
 	}
 
-	function searchExistRTMVersion($projectId){
+	function searchExistRTMVersion($projectId,$testCaseId,$functionId){
 		$sqlStr = "SELECT *
 			FROM M_RTM_VERSION 
 			WHERE projectId = $projectId
+			AND testCaseId = $testCaseId
+			AND functionId = $functionId
 			AND activeFlag = '1'";
 		$result = $this->db->query($sqlStr);
 		return $result->row();
@@ -101,7 +103,8 @@ class RTM_model extends CI_Model{
 
 	function insertRTMInfo($param, $user){
 		$currentDateTime = date('Y-m-d H:i:s');
-		$sqlStr = "INSERT INTO M_RTM (projectId, functionId, testCaseId, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ($param->projectId, $param->functionId, $param->testCaseId, '$param->effectiveStartDate', NULL, '$param->activeFlag', '$currentDateTime', '$user', '$currentDateTime', '$user') ";
+		$sqlStr = "INSERT INTO M_RTM (projectId, functionId, testCaseId, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) 
+		VALUES ($param->projectId, $param->functionId, $param->testCaseId, '$param->effectiveStartDate', NULL, '$param->activeFlag', '$currentDateTime', '$user', '$currentDateTime', '$user') ";
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}
@@ -112,8 +115,10 @@ class RTM_model extends CI_Model{
 
 //		$sqlStr = "INSERT INTO M_RTM_VERSION (projectId, rtmVersionNumber, effectiveStartDate, effectiveEndDate, activeFlag, previousVersionId, createDate,	createUser, updateDate, updateUser) VALUES ($param->projectId, $param->versionNo, '$param->effectiveStartDate', NULL, '$param->activeFlag', $previousVersionId, '$currentDateTime', '$user', '$currentDateTime', '$user')";
 
-		$sqlStr = "INSERT INTO M_RTM_VERSION (projectId, testCaseId,testCaseversion,functiooId,functionVersion,effectiveStartDate, effectiveEndDate, activeFlag, createDate,	createUser, updateDate, updateUser)
-		VALUES ($param->projectId, $param->testCaseId,'$param->testCaseversion','$param->functiooId','$param->functionVersion', '$param->effectiveStartDate', NULL, '$param->activeFlag', '$currentDateTime', '$user', '$currentDateTime', '$user')";
+		$sqlStr = "INSERT INTO M_RTM_VERSION (projectId, testCaseId,testCaseversion,functionId,functionVersion,effectiveStartDate, effectiveEndDate, 
+		activeFlag, createDate,	createUser, updateDate, updateUser)
+		VALUES ($param->projectId, '$param->testCaseId','$param->testCaseversion','$param->functionId','$param->functionversion', '$param->effectiveStartDate', NULL, 
+		'$param->activeFlag', '$currentDateTime', '$user', '$currentDateTime', '$user')";
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}
@@ -164,26 +169,57 @@ class RTM_model extends CI_Model{
 		return $this->db->affected_rows();	
 	}
 
+	function searchExistFunctionalRequirement($fnId, $projectId){
+
+		if(null != $projectId && !empty($projectId)){
+			$where[] = "projectId = '$projectId'";
+		}
+		if(null != $fnId && !empty($fnId)){
+			$where[] = "functionNo = '$fnId'";
+		}
+		$where_clause = implode(' AND ', $where);
+		
+		$queryStr = "SELECT * 
+			FROM M_FN_REQ_HEADER 
+			WHERE $where_clause";
+		//echo $queryStr;
+		$result = $this->db->query($queryStr);
+		return $result->row();
+	}
+
 	function uploadRTM($param, $user){
 		$this->db->trans_begin(); //Starting Transaction
 		$effectiveStartDate = '';
-		
+
+	//	echo $param[0]->functionId;
+	//	echo $param[0]->testCaseId;
+		$resultfunction = $this->searchExistFunctionalRequirement($param[0]->functionId,$param[0]->projectId);
+		//3.1 Update Version
+		$param[0]->functionversion = $resultfunction->functionversion;
+		$param[0]->functionId = $resultfunction->functionId;
+
+		$resulttestcase = $this->mTestCase->searchExistTestCaseHeader($param[0]->projectId,$param[0]->testCaseId);
+		$param[0]->testCaseversion = $resulttestcase->testcaseVersion;
+		$param[0]->testCaseId = $resulttestcase->testCaseId;
+
+	//	echo $param[0]->functionId;
+	//	echo $param[0]->testCaseId;
 		//Check Existing RTM Version
-		$result = $this->searchExistRTMVersion($param[0]->projectId);
+		$result = $this->searchExistRTMVersion($param[0]->projectId,$param[0]->testCaseId ,$param[0]->functionId);
 		if((NULL != $result) && (0 < count($result))){
 			$effectiveStartDate = $result->effectiveStartDate;
 		}else{
 			$effectiveStartDate = date('Y-m-d H:i:s');
 			$param[0]->effectiveStartDate = $effectiveStartDate;
-			$resultfunction = $this->mFR->searchExistFunctionalRequirement($param[0]->projectId,$param->functionId);
-			$resulttestcase = $this->mTestCase->searchExistTestCaseHeader($param[0]->projectId,$param->testCaseId);
-			$param[0]->functionVersion = $resultfunction['functionVersion'];
-			$param[0]->testCaseversion = $resulttestcase['testCaseversion'];
-			$resultInsertRTMVersion = $this->insertRTMVersion($param[0], $user);
 		}
-
+		
 		foreach ($param as $value) {
+			
+			$value->functionId = $param[0]->functionId ;
+			$value->testCaseId = $param[0]->testCaseId ;
+
 			$value->effectiveStartDate = $effectiveStartDate;
+			$resultInsertRTMVersion = $this->insertRTMVersion($param[0], $user);
 			$resultInsertRTMInfo = $this->insertRTMInfo($value, $user);
 		}
 
