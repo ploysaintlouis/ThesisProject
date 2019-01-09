@@ -191,8 +191,14 @@
                 								</td>
 												
                 								<td>
+										
+												<?php if ($value['typeData'] == 'Input'){
+													$value['typeData'] = '1';
+												}else{
+													$value['typeData'] = '2';
+												}	?>											
                 									<?php $keyId = $projectInfo->projectId."|".$value['dataId']."|".$value['schemaVersionId']."|".$hfield['functionId']."|".$value['typeData']; ?>
-													
+												
                 								<button type="button" name="edit" id="<?php echo $keyId; ?>" class="btn btn-warning btn-xs view" >Edit</button> 
 													<button type="button" name="delete" id="<?php echo $keyId; ?>" class="btn btn-danger btn-xs delete" >Delete</button>
 
@@ -237,6 +243,7 @@
 	                							$define = 1;
 			               						foreach($inputChangeList as $value): ?>
 				               					<tr>
+												   
 				               						<td><?php echo $define++; ?></td>
 													<?php if ($value['typeData']== 1) { ?>
 														<td><?php echo "Input"; ?> </td>

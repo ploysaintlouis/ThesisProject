@@ -322,7 +322,7 @@ class ChangeManagement extends CI_Controller{
 		$displayFlag = (CHANGE_TYPE_ADD == $mode)? 'block': 'none';
 		$requiredField = (CHANGE_TYPE_ADD == $mode)? '<span style="color:red;">*</span>': '';
 
-		if ($row["typeData"] = '1' ) {
+		if ($row["typeData"] == 1 ) {
 			$displayInput = 'Input Name';
 		} else {
 			$displayInput = 'Output Name';

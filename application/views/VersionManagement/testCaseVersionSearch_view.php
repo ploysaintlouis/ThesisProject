@@ -176,11 +176,27 @@
 										<?php 
 	                						$define = 1;
 	                						foreach ($resultList as $value): ?>
+											<?php if ($value['typeData'] == 1) { ?>
 	                						<tr>
 	                							<td><?php echo $define++; ?></td>
 	                							<td><?php echo $value['refdataName']; ?></td>
 	                							<td><?php echo $value['testData']; ?></td>
 	                						</tr>
+											<?php } ?>
+												<?php if ($value['typeData'] == 2) { 
+													$lineout = 1; ?>
+
+													<?php if ($lineout==1){ ?>
+													<th>#</th>
+													<th>Output Name</th>
+													<th>Test Data</th>
+													<?php } ?>
+													<tr>
+														<td><?php echo $lineout++; ?></td>
+														<td><?php echo $value['refdataName']; ?></td>
+														<td><?php echo $value['testData']; ?></td>	
+													</tr>													
+												<?php } ?>						
 	                					<?php endforeach; ?>
 									</tbody>
 								</table>
