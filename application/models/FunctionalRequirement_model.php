@@ -334,7 +334,7 @@ class FunctionalRequirement_model extends CI_Model {
 				h.functionNo,
 				h.functionDescription,
 				v.functionVersion,
-				'' schemaVersionId,
+				NULL schemaVersionId,
 				v.typeData,
 				v.dataId,
 				V.dataName,
@@ -355,6 +355,9 @@ class FunctionalRequirement_model extends CI_Model {
 		AND v.activeFlag = '1'
 		AND v.refTableName =''
 		AND v.refColumnName = ''
+		LEFT JOIN M_DATABASE_SCHEMA_INFO db
+		ON v.refTableName = db.tableName
+		AND v.refColumnName = db.columnName		
 		WHERE $where_clause
 		ORDER BY v.dataId";
 
