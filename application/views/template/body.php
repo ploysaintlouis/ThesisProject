@@ -107,7 +107,7 @@
 			$('#changeInput_form').on("submit", function(event){
 				event.preventDefault(); 
 
-				//alert($('input[name=projectId]').val());
+				//alert($('input[name=functionVersion]').val());
 				
 				var newUnique = ($('#inputUnique').is(":checked"))? "Y": "N";
 				var newNotNull = ($('#inputNotNull').is(":checked"))? "Y": "N";
@@ -132,8 +132,9 @@
 				}else{
 					if($('#inputDataType').val() == "" 
 						|| $('#dataName').val() == "" 
-						|| $('#inputTableName').val() == "" 
-						|| $('#inputColumnName').val() == ""){
+					//	|| $('#inputTableName').val() == "" 
+					//	|| $('#inputColumnName').val() == ""
+					){
 						alert("Please enter all required fields.");
 						return false;
 					}
@@ -142,6 +143,7 @@
 				//Pass Validation
 				$.ajax({
 					url: "<?php echo base_url(); ?>index.php/ChangeManagement/saveTempFRInput_edit/",
+					
 					method: "POST",
 					data: $("#changeInput_form").serialize(),
 					success: function(data){
@@ -165,7 +167,20 @@
 					},
 					error: function(){ 
 			//			alert("There is a problem when save data, Please try to save again.");
-								alert("ploy");
+						alert($('#changeProjectId').val());
+						alert($('#changeType').val());
+						alert($('#user').val());
+
+						alert($('#userId').val());
+						alert($('#changeFunctionId').val());
+						alert($('#changeFunction').val());
+						alert($('#changedataId').val());
+						alert($('#changetypeData').val());
+						alert($('#changeSchemaVersionId').val());
+						alert($('#dataName').val());
+						alert($('#inputDataType').val());
+						alert($('#inputTableName').val());
+						alert($('#inputColumnName').val());
 					//	return false; 
 					return true;
 					}

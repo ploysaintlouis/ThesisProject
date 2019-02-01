@@ -53,7 +53,7 @@ class Login extends CI_Controller {
 			If(null != $result){
 				//echo 'pass';
 				$userSession = array(
-					'userid' 	=> $result->userid,
+					'userId' 	=> $result->userId,
 					'Firstname' => $result->Firstname,
 					'lastname' 	=> $result->lastname, 
 					'username' 	=> $username,

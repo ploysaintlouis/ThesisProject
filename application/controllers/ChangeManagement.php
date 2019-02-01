@@ -216,7 +216,7 @@ class ChangeManagement extends CI_Controller{
 		$resultList = array();
 		$inputChangeList = array();
 
-		$userId = $this->session->userdata('userId');
+		$userId = $this->session->userdata('userId'); //echo $_SESSION['userId'] ;
 		if(!empty($projectId) && !empty($functionId)){
 			$projectInfo = $this->mProject->searchProjectDetail($projectId);
 			$data['projectInfo'] = $projectInfo;
@@ -265,7 +265,7 @@ class ChangeManagement extends CI_Controller{
 			'projectId' => $projectId,
 			'functionId' => $functionId,
 			'functionVersion' => $functionVersion,
-			'typedata' => '',
+			'typeData' => '',
 			'dataId' => '',
 			'dataName' => '',
 			'schemaVersionId' => $schemaVersionId,
@@ -293,7 +293,7 @@ class ChangeManagement extends CI_Controller{
 			$keyList = explode("|", $keyId);
 			//inputid
 			
-			$param = (object) array('projectId' => $keyList[0], 'dataId' => $keyList[1], 'schemaVersionId' => $keyList[2], 'functionId' => $keyList[3], 'typedata' => $keyList[4]);
+			$param = (object) array('projectId' => $keyList[0], 'dataId' => $keyList[1], 'schemaVersionId' => $keyList[2], 'functionId' => $keyList[3], 'typeData' => $keyList[4]);
 
 			$result = $this->mFR->searchFunctionalRequirementDetail($param);
 
@@ -319,6 +319,9 @@ class ChangeManagement extends CI_Controller{
 		$checkUnique = ($row["constraintUnique"] == "Y")? 'checked' : '';
 		$checkNotNull = ($row["constraintNull"] == "Y")? 'checked' : '';
 
+		$inputtype = ($row["typeData"] == "1")? 'checked' : '';
+		$outputtype = ($row["typeData"] == "2")? 'checked' : '';
+
 		$displayFlag = (CHANGE_TYPE_ADD == $mode)? 'block': 'none';
 		$requiredField = (CHANGE_TYPE_ADD == $mode)? '<span style="color:red;">*</span>': '';
 
@@ -327,18 +330,20 @@ class ChangeManagement extends CI_Controller{
 		} else {
 			$displayInput = 'Output Name';
 		}
-
+		//echo $_SESSION['userId'] ;
 
 //modify 20181217 add output
 	if($mode == "edit" ){
 		$output = '
-			<input type="hidden" name="changeProjectId" value="'.$row["projectId"].'">
+			<input type="hidden" name="changeProjectId" id="changeProjectId" value="'.$row["projectId"].'">
 			<input type="hidden" name="changeType" id="changeType" value="'.$mode.'">
-			<input type="hidden" name="changeFunctionId" value="'.$row["functionId"].'">
-			<input type="hidden" name="changeFunction" value="'.$row["functionVersion"].'">
-			<input type="hidden" name="changedataId" value="'.$row["dataId"].'">
-			<input type="hidden" name="changetypeData" value="'.$row["typeData"].'">  
-			<input type="hidden" name="changeSchemaVersionId" value="'.$row["schemaVersionId"].'">
+			<input type="hidden" name="changeFunctionId" id="changeFunctionId" value="'.$row["functionId"].'">
+			<input type="hidden" name="changeFunction" id="changeFunction" value="'.$row["functionVersion"].'">
+			<input type="hidden" name="changedataId" id="changedataId" value="'.$row["dataId"].'">
+			<input type="hidden" name="changetypeData" id="changetypeData" value="'.$row["typeData"].'">  
+			<input type="hidden" name="changeSchemaVersionId" id="changeSchemaVersionId" value="'.$row["schemaVersionId"].'">
+			<input type="hidden" name="userId" id="userId"  value="'.$_SESSION['userId'].'">
+			<input type="hidden" name="user" id="user"  value="'.$_SESSION['username'].'">
 
 			<input type="hidden" name="oldDataType" 	value="'.$row["dataType"].'">
 			<input type="hidden" name="oldDataLength" 	value="'.$row["dataLength"].'">
@@ -359,7 +364,7 @@ class ChangeManagement extends CI_Controller{
 				</td>
 				
 				<td>
-					<input type="text" name="dataName" id="dataName" class="form-control" value="'.$row["dataName"].'" style="display:'.$displayFlag.'" maxlength="'.MAX_INPUT_NAME.'" />
+					<input type="text" name="dataName" id="dataName" class="form-control" value="'.$row["dataName"].'" maxlength="'.MAX_INPUT_NAME.'" />
 				</td>	
 
 			</tr>
@@ -464,12 +469,14 @@ class ChangeManagement extends CI_Controller{
 			</table>';
 	}else {
 		$output = '
-			<input type="hidden" name="changeProjectId" value="'.$row["projectId"].'">
+			<input type="hidden" name="changeProjectId" id="changeProjectId" value="'.$row["projectId"].'">
 			<input type="hidden" name="changeType" id="changeType" value="'.$mode.'">
-			<input type="hidden" name="changeFunctionId" value="'.$row["functionId"].'">
-			<input type="hidden" name="changeFunction" value="'.$row["functionVersion"].'">
-			<input type="hidden" name="changetypeData" value="'.$row["typeData"].'">  
-			<input type="hidden" name="changeSchemaVersionId" value="1">
+			<input type="hidden" name="changeFunctionId" id="changeFunctionId" value="'.$row["functionId"].'">
+			<input type="hidden" name="changeFunction" id="changeFunction" value="'.$row["functionVersion"].'">
+			<input type="hidden" name="changetypeData" id="changetypeData" value="'.$row["typeData"].'">  
+			<input type="hidden" name="changeSchemaVersionId" id="changeSchemaVersionId"  value="'.$row["schemaVersionId"].'">
+			<input type="hidden" name="userId" id="userId"  value="'.$_SESSION['userId'].'">
+			<input type="hidden" name="user" id="user"  value="'.$_SESSION['username'].'">
 
 			<table style="width:100%">
 			<tr height="40">
@@ -477,13 +484,13 @@ class ChangeManagement extends CI_Controller{
 				<td>
 					<div class="radio">
 						<label style="font-weight:700;">
-						<input type="radio" id="changetypeData" name="changetypeData" value="1" class="checkbox">Input Name
+						<input type="radio" id="changetypeData" name="changetypeData" value="'.$inputtype.'" class="checkbox">Input Name
 						</label>
 
 						&nbsp;&nbsp;
 						
 						<label style="font-weight:700;">
-						<input type="radio" id="changetypeData" name="changetypeData" value="2" class="checkbox">Output Name
+						<input type="radio" id="changetypeData" name="changetypeData" value="'.$outputtype.'" class="checkbox">Output Name
 						</label>
 					</div>
 				</td>	
@@ -503,7 +510,7 @@ class ChangeManagement extends CI_Controller{
 			</tr>
 			<tr height="40">
 				<td>
-					<label>Data Length: '.$row["schemaVersionId"].'
+					<label>Data Length: 
 					<p class="text-green" style="margin:0;"></p>
 					</label>
 				</td>
@@ -602,7 +609,7 @@ class ChangeManagement extends CI_Controller{
 
 			try{
 				$changeType = $this->input->post('changeType');
-
+				
 				$userId = $this->session->userdata('userId');
 				$functionId = $this->input->post('changeFunctionId');
 				$functionVersion = $this->input->post('changeFunction');
