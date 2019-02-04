@@ -319,9 +319,6 @@ class ChangeManagement extends CI_Controller{
 		$checkUnique = ($row["constraintUnique"] == "Y")? 'checked' : '';
 		$checkNotNull = ($row["constraintNull"] == "Y")? 'checked' : '';
 
-		$inputtype = ($row["typeData"] == "1")? 'checked' : '';
-		$outputtype = ($row["typeData"] == "2")? 'checked' : '';
-
 		$displayFlag = (CHANGE_TYPE_ADD == $mode)? 'block': 'none';
 		$requiredField = (CHANGE_TYPE_ADD == $mode)? '<span style="color:red;">*</span>': '';
 
@@ -332,6 +329,11 @@ class ChangeManagement extends CI_Controller{
 		}
 		//echo $_SESSION['userId'] ;
 
+		if (CHANGE_TYPE_ADD == $mode) {
+			$resultList = $this->mFR->searchLatestFunctionalRequirementMaxId();
+			$row["dataId"] = $resultList + 1 ;
+		}
+		
 //modify 20181217 add output
 	if($mode == "edit" ){
 		$output = '
@@ -477,6 +479,7 @@ class ChangeManagement extends CI_Controller{
 			<input type="hidden" name="changeSchemaVersionId" id="changeSchemaVersionId"  value="'.$row["schemaVersionId"].'">
 			<input type="hidden" name="userId" id="userId"  value="'.$_SESSION['userId'].'">
 			<input type="hidden" name="user" id="user"  value="'.$_SESSION['username'].'">
+			<input type="hidden" name="changedataId" id="changedataId" value="'.$row["dataId"].'">
 
 			<table style="width:100%">
 			<tr height="40">
@@ -484,17 +487,17 @@ class ChangeManagement extends CI_Controller{
 				<td>
 					<div class="radio">
 						<label style="font-weight:700;">
-						<input type="radio" id="changetypeData" name="changetypeData" value="'.$inputtype.'" class="checkbox">Input Name
+						<input type="radio" id="changetypeData" name="changetypeData" value="1">Input Name
 						</label>
 
 						&nbsp;&nbsp;
 						
 						<label style="font-weight:700;">
-						<input type="radio" id="changetypeData" name="changetypeData" value="'.$outputtype.'" class="checkbox">Output Name
+						<input type="radio" id="changetypeData" name="changetypeData" value="2">Output Name
 						</label>
 					</div>
 				</td>	
-				<td>
+				<td>'.$row["typeData"].'
 					<input type="text" name="dataName" id="dataName" class="form-control" style="display:'.$displayFlag.'" maxlength="'.MAX_INPUT_NAME.'" />
 				</td>	
 			</tr>
@@ -661,6 +664,7 @@ class ChangeManagement extends CI_Controller{
 				if(CHANGE_TYPE_ADD == $changeType){ 
 					//*******Change Type: Add
 					//Validate
+			
 					$projectId = $this->input->post('changeProjectId');
 					$resultValidate = $this->validateNewFRInput($projectId, $param, $error_message);
 				
@@ -709,7 +713,7 @@ class ChangeManagement extends CI_Controller{
 						'typeData' => $typeData,
 						'schemaVersionId' => $schemaVersionId);
 					$records = $this->mChange->searchTempFRInputChangeList($criteria);
-					
+				
 					if(0 == count($records)){
 						$param->unique = ($unique == $oldUnique)? "": $unique;
 						$param->notNull = ($notNull == $oldNotNull)? "": $notNull;

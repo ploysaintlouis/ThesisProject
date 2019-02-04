@@ -167,7 +167,7 @@
 					},
 					error: function(){ 
 			//			alert("There is a problem when save data, Please try to save again.");
-						alert($('#changeProjectId').val());
+					alert($('#changeProjectId').val());
 						alert($('#changeType').val());
 						alert($('#user').val());
 

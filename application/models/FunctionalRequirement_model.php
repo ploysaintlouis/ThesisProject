@@ -366,6 +366,12 @@ class FunctionalRequirement_model extends CI_Model {
 		return $result->result_array();
 	}
 
+	function searchLatestFunctionalRequirementMaxId(){
+			$query = $this->db->query("SELECT IDENT_CURRENT('M_FN_REQ_DETAIL') as last_id");
+			$resultId = $query->result();
+			return $resultId[0]->last_id;
+	}
+
 	function searchLatestFunctionalRequirementVersion($functionId, $functionVersion){
 		$sqlStr = "SELECT *
 			FROM M_FN_REQ_VERSION 
