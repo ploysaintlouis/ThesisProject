@@ -347,12 +347,12 @@ class ChangeManagement extends CI_Controller{
 			<input type="hidden" name="userId" id="userId"  value="'.$_SESSION['userId'].'">
 			<input type="hidden" name="user" id="user"  value="'.$_SESSION['username'].'">
 
-			<input type="hidden" name="oldDataType" 	value="'.$row["dataType"].'">
-			<input type="hidden" name="oldDataLength" 	value="'.$row["dataLength"].'">
-			<input type="hidden" name="oldScale" 		value="'.$row["decimalPoint"].'">
-			<input type="hidden" name="oldDefaultValue" value="'.$row["constraintDefault"].'">
-			<input type="hidden" name="oldMin" 			value="'.$row["constraintMinValue"].'">
-			<input type="hidden" name="oldMax" 			value="'.$row["constraintMaxValue"].'">
+			<input type="hidden" name="oldDataType" id="oldDataType"	value="'.$row["dataType"].'">
+			<input type="hidden" name="oldDataLength" id="oldDataLength"	value="'.$row["dataLength"].'">
+			<input type="hidden" name="oldScale" 	id="oldScale"	value="'.$row["decimalPoint"].'">
+			<input type="hidden" name="oldDefaultValue" id="oldDefaultValue" value="'.$row["constraintDefault"].'">
+			<input type="hidden" name="oldMin" id="oldMin"	value="'.$row["constraintMinValue"].'">
+			<input type="hidden" name="oldMax" 	id="oldMax" value="'.$row["constraintMaxValue"].'">
 			<input type="hidden" id="oldNotNullValue" name="oldNotNullValue" value="'.$row["constraintNull"].'">
 			<input type="hidden" id="oldUniqueValue" name="oldUniqueValue" value="'.$row["constraintUnique"].'">
 
@@ -475,7 +475,7 @@ class ChangeManagement extends CI_Controller{
 			<input type="hidden" name="changeType" id="changeType" value="'.$mode.'">
 			<input type="hidden" name="changeFunctionId" id="changeFunctionId" value="'.$row["functionId"].'">
 			<input type="hidden" name="changeFunction" id="changeFunction" value="'.$row["functionVersion"].'">
-			<input type="hidden" name="changetypeData" id="changetypeData" value="'.$row["typeData"].'">  
+
 			<input type="hidden" name="changeSchemaVersionId" id="changeSchemaVersionId"  value="'.$row["schemaVersionId"].'">
 			<input type="hidden" name="userId" id="userId"  value="'.$_SESSION['userId'].'">
 			<input type="hidden" name="user" id="user"  value="'.$_SESSION['username'].'">
@@ -495,6 +495,7 @@ class ChangeManagement extends CI_Controller{
 						<label style="font-weight:700;">
 						<input type="radio" id="changetypeData" name="changetypeData" value="2">Output Name
 						</label>
+
 					</div>
 				</td>	
 				<td>'.$row["typeData"].'
@@ -608,8 +609,8 @@ class ChangeManagement extends CI_Controller{
 		$output = '';
 		$error_message = '';
 		
-		if(!empty($_POST)){
-
+		if(!empty($_POST))
+		{
 			try{
 				$changeType = $this->input->post('changeType');
 				
@@ -684,6 +685,7 @@ class ChangeManagement extends CI_Controller{
 					}
 
 				}else{ 
+					
 					//*******Change Type: Edit
 					//validate duplicate 
 					$oldDataType = $this->input->post('oldDataType');
@@ -699,6 +701,7 @@ class ChangeManagement extends CI_Controller{
 						|| (!empty($oldDefaultValue) && !empty($defaultValue) && ($oldDefaultValue == $defaultValue))
 						|| (!empty($oldMinValue) && !empty($minValue) && ((int)$oldMinValue == (int)$minValue))
 						|| (!empty($oldMaxValue) && !empty($maxValue) && ((int)$oldMaxValue == (int)$maxValue)))
+						//return true;
 					{
 						echo 'error|'.ER_TRN_009;
 						return false;
@@ -715,15 +718,19 @@ class ChangeManagement extends CI_Controller{
 					$records = $this->mChange->searchTempFRInputChangeList($criteria);
 				
 					if(0 == count($records)){
+						
 						$param->unique = ($unique == $oldUnique)? "": $unique;
 						$param->notNull = ($notNull == $oldNotNull)? "": $notNull;
 						$param->changeType = CHANGE_TYPE_EDIT;
-						
+						//error
 						$saveResult = $this->mChange->insertTempFRInputChange($param);
+					
 						if($saveResult){
 							//refresh Change List
 							$output = $this->setInputChangeListData($userId, $functionId, $functionVersion);
+							
 						}else{
+							
 							$output = 'error|'.ER_MSG_013;
 						}
 					}else{
@@ -894,7 +901,7 @@ class ChangeManagement extends CI_Controller{
 		$this->load->library('common');
 		
 		$correctFRInput = false;
-		$dataId = '';
+		//$dataId = '';
 
 		//1. Check Existing in Selected Functional Requirement
 		$param->inputActiveFlag = ACTIVE_CODE;
@@ -912,12 +919,19 @@ class ChangeManagement extends CI_Controller{
 			'dataName' => $param->dataName,
 			'table' => $param->table,
 			'column' => $param->column);
-		*/
+		
 		$criteria = (object) array(
 			'userId' => $param->userId, 
 			'functionId' => $param->functionId,
 			'functionVersion' => $param->functionVersion,
-			'dataName' => $param->dataName);
+			'dataName' => $param->dataName);*/
+		$criteria = (object) array(
+				'userId' => $param->userId, 
+				'functionId' => $param->functionId,
+				'functionVersion' => $param->functionVersion,
+				'dataName' => $param->dataName,
+				'schemaVersionId' => $param->schemaVersionId);
+
 		$resultExist = $this->mChange->searchTempFRInputChangeList($criteria);
 		if(0 < count($resultExist)){
 			$errorMsg = ER_TRN_006;

@@ -134,25 +134,28 @@ class ChangeManagement_model extends CI_Model{
 		$tableName = !empty($param->table)? "'".$param->table."'" : "NULL";
 		$columnName = !empty($param->column)? "'".$param->column."'" : "NULL";
 
-		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion,typeData, dataName, schemaVersionId, newDataType, newDataLength, newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate) 
+		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion,typeData, dataName, schemaVersionId, newDataType, newDataLength, 
+		newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate) 
 			VALUES (
-				$param->userId, 
-				$param->functionId,
-				$param->functionVersion,
-				$param->typeData,
-				$param->dataName,
-				$schemaVersionId,
-				$dataType,
-				$dataLength,
-				$scale,
-				$unique,
-				$notNull,
-				$default,
-				$min,
-				$max,
-				$tableName,
-				$columnName,
-				'$param->changeType', '$param->user', '$currentDateTime')";
+				'$param->userId', 
+				'$param->functionId',
+				'$param->functionVersion',
+				'$param->typeData',
+				'$param->dataName',
+				'$schemaVersionId',
+				'$dataType',
+				'$dataLength',
+				'$scale',
+				'$unique',
+				'$notNull',
+				'$default',
+				'$min',
+				'$max',
+				'$tableName',
+				'$columnName',
+				'$param->changeType',
+				'$param->user', 
+				'$currentDateTime')";
 
 		$result = $this->db->query($sqlStr);
 		return $result;

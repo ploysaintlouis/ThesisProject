@@ -166,19 +166,19 @@
 						}
 					},
 					error: function(){ 
-			//			alert("There is a problem when save data, Please try to save again.");
-					alert($('#changeProjectId').val());
+					//	alert("There is a problem when save data, Please try to save again.");
+				alert($('#changeProjectId').val());
 						alert($('#changeType').val());
 						alert($('#user').val());
 
 						alert($('#userId').val());
-						alert($('#changeFunctionId').val());
-						alert($('#changeFunction').val());
-						alert($('#changedataId').val());
-						alert($('#changetypeData').val());
-						alert($('#changeSchemaVersionId').val());
-						alert($('#dataName').val());
-						alert($('#inputDataType').val());
+						alert($('#oldDataType').val());
+						alert($('#oldScale').val());
+						alert($('#oldDefaultValue').val());
+						alert($('#oldMin').val());
+						alert($('#oldMax').val());
+						alert($('#oldNotNullValue').val());
+						alert($('#oldUniqueValue').val());
 						alert($('#inputTableName').val());
 						alert($('#inputColumnName').val());
 					//	return false; 
