@@ -254,8 +254,8 @@ define('ER_TRN_001', "Can't save because this Functional Requirement's Input alr
 define('ER_TRN_002', "Input Name is required.");
 define('ER_TRN_003', "Input Name length exceeded.");
 define('ER_TRN_004', "Table and Column that you enter does not match with current Input in database.");
-define('ER_TRN_005', "This Input already exist in Functional Requirement.");
-define('ER_TRN_006', "This Input already exist in Change List.");
+define('ER_TRN_005', "This Data already exist in Functional Requirement.");
+define('ER_TRN_006', "This Data already exist in Change List.");
 define('ER_TRN_007', "Input data does not match existing Schema Information.");
 define('ER_TRN_008', "Data Type is required.");
 define('ER_TRN_009', "No change on existing data.");

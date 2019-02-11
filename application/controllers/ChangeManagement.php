@@ -134,7 +134,7 @@ class ChangeManagement extends CI_Controller{
 						'projectId' => $projectId,
 						'functionId' => $functionId,
 						'functionVersion' => $functionVersion);
-
+echo $projectId;
 					$projectInfo = $this->mProject->searchProjectDetail($projectId);
 					$result = $this->mChange->changeProcess($changeInfo, $changeResult, $projectInfo, $user, $error_message, $changeRequestNo);
 
@@ -670,6 +670,7 @@ class ChangeManagement extends CI_Controller{
 					$resultValidate = $this->validateNewFRInput($projectId, $param, $error_message);
 				
 					if($resultValidate){
+						
 						//Save
 						$param->changeType = CHANGE_TYPE_ADD;
 						$saveResult = $this->mChange->insertTempFRInputChange($param);
@@ -722,7 +723,7 @@ class ChangeManagement extends CI_Controller{
 						$param->unique = ($unique == $oldUnique)? "": $unique;
 						$param->notNull = ($notNull == $oldNotNull)? "": $notNull;
 						$param->changeType = CHANGE_TYPE_EDIT;
-						//error
+						
 						$saveResult = $this->mChange->insertTempFRInputChange($param);
 					
 						if($saveResult){
@@ -742,7 +743,7 @@ class ChangeManagement extends CI_Controller{
 				$output = 'error|'.ER_MSG_013.'<br/>'.$e;
 			}
 		}
-		echo $output;
+		//echo $output;
 		return false;
 	}
 
@@ -793,7 +794,7 @@ class ChangeManagement extends CI_Controller{
 					'table' => $inputInfo['refTableName'],
 					'column' => $inputInfo['refColumnName'],
 					'changeType' => CHANGE_TYPE_DELETE,
-					'user' => $user);
+					'user' => $user);				
 				$saveResult = $this->mChange->insertTempFRInputChange($param);
 				if($saveResult){
 					//refresh Change List
@@ -905,12 +906,15 @@ class ChangeManagement extends CI_Controller{
 
 		//1. Check Existing in Selected Functional Requirement
 		$param->inputActiveFlag = ACTIVE_CODE;
+		//echo $param->dataName;
 		$resultExist = $this->mFR->searchExistFRInputInFunctionalRequirement($param);
+
 		if(0 < count($resultExist)){
 			$errorMsg = ER_TRN_005;
+			
 			return false;
 		}
-
+		
 		//2. Check Existing in Current Change List
 		/* $criteria = (object) array(
 			'userId' => $param->userId, 
@@ -1159,8 +1163,8 @@ class ChangeManagement extends CI_Controller{
 				'default' 		=> $value['constraintDefault'],
 				'min' 			=> $value['constraintMinValue'],
 				'max' 			=> $value['constraintMaxValue'],
-				'tabelName' 	=> $value['tableName'],
-				'columnName' 	=> $value['columnName']);		
+				'tabelName' 	=> $value['refTableName'],
+				'columnName' 	=> $value['refColumnName']);		
 			}
 		}
 		$passData['FRDetail'] = $allFRDetail;
@@ -1178,7 +1182,8 @@ class ChangeManagement extends CI_Controller{
 		//5. All Test Case Detail data
 		$tcDetailList = $this->mTestCase->searchExistTestCaseDetail($param->projectId);
 		foreach ($tcDetailList as $value) {
-			$allTCDetail[$value['testCaseNo']][$value['refInputName']] = $value['testData'];
+		//	$allTCDetail[$value['testCaseNo']][$value['refInputName']] = $value['testData'];
+			$allTCDetail[$value['testCaseNo']][$value['refdataName']] = $value['testData'];	
 		}
 		$passData['TCDetail'] = $allTCDetail;
 

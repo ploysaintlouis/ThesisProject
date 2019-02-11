@@ -166,8 +166,8 @@
 						}
 					},
 					error: function(){ 
-					//	alert("There is a problem when save data, Please try to save again.");
-				alert($('#changeProjectId').val());
+						alert("There is a problem when save data, Please try to save again.");
+				/*alert($('#changeProjectId').val());
 						alert($('#changeType').val());
 						alert($('#user').val());
 
@@ -180,7 +180,7 @@
 						alert($('#oldNotNullValue').val());
 						alert($('#oldUniqueValue').val());
 						alert($('#inputTableName').val());
-						alert($('#inputColumnName').val());
+						alert($('#inputColumnName').val());*/
 					//	return false; 
 					return true;
 					}
