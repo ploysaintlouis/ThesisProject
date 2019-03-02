@@ -112,7 +112,7 @@ class FunctionalRequirement_model extends CI_Model {
 	}
 
 	function searchFRInputDetailByCriteria($param){
-		if(null != $param->inputId && !empty($param->dataId)){
+		if(null != $param->dataId && !empty($param->dataId)){
 			$where[] = "i.dataId = $param->dataId";
 		}
 /*
@@ -142,13 +142,19 @@ class FunctionalRequirement_model extends CI_Model {
 			d.constraintNull, d.constraintDefault, d.constraintMinValue, d.constraintMaxValue,i.outputName
 			FROM M_FN_REQ_INPUT i
 			WHERE $where_clause";*/
-		$sqlStr = "SELECT i.typedata,i.dataid,i.dataname,i.refTableName, i.refColumnName,
+		/*$sqlStr = "SELECT i.typedata,i.dataid,i.dataname,i.refTableName, i.refColumnName,
 				      i.dataType,i.dataLength, i.decimalPoint, i.constraintUnique, 
 					i.constraintNull, i.constraintDefault, i.constraintMinValue,
 					 i.constraintMaxValue
 					 FROM M_FN_REQ_DETAIL i
-					 where $where_clause";
-
+					 where $where_clause";*/
+		$sqlStr = "SELECT i.typeData,i.dataId,i.dataName,i.refTableName, i.refColumnName,
+			i.dataType,i.dataLength, i.decimalPoint, i.constraintUnique, 
+		i.constraintNull, i.constraintDefault, i.constraintMinValue,
+		i.constraintMaxValue
+	   FROM M_FN_REQ_DETAIL i
+	   where $where_clause";
+	   //echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $result->row_array();
 	}
@@ -160,9 +166,9 @@ class FunctionalRequirement_model extends CI_Model {
 		if(isset($param->dataName) && !empty($param->dataName)){
 			$where[] = "d.dataName = '$param->dataName'";
 		}
-		if(isset($param->dataId) && !empty($param->dataId)){
-			$where[] = "d.dataId = $param->dataId";
-		}
+	/*	if(isset($param->dataId) && !empty($param->dataId)){
+			$where[] = "d.dataId = $param->dataId or d.dataName <> '$param->dataName'";
+		}*/
 		if(isset($param->schemaVersionId) && !empty($param->schemaVersionId)){
 			$where[] = "d.schemaVersionId = $param->schemaVersionId";
 		}
@@ -179,7 +185,7 @@ class FunctionalRequirement_model extends CI_Model {
 			ON h.functionId = d.functionId
 			AND d.activeFlag = '1'
 			WHERE $where_clause";
-
+echo $queryStr;
 		$result = $this->db->query($queryStr);
 		return $result->result_array();
 	}
@@ -334,7 +340,7 @@ class FunctionalRequirement_model extends CI_Model {
 				h.functionNo,
 				h.functionDescription,
 				v.functionVersion,
-				'' schemaVersionId,
+				NULL schemaVersionId,
 				v.typeData,
 				v.dataId,
 				V.dataName,
@@ -355,12 +361,21 @@ class FunctionalRequirement_model extends CI_Model {
 		AND v.activeFlag = '1'
 		AND v.refTableName =''
 		AND v.refColumnName = ''
+		LEFT JOIN M_DATABASE_SCHEMA_INFO db
+		ON v.refTableName = db.tableName
+		AND v.refColumnName = db.columnName		
 		WHERE $where_clause
 		ORDER BY v.dataId";
 
 			//var_dump($queryStr);
 		$result = $this->db->query($queryStr);
 		return $result->result_array();
+	}
+
+	function searchLatestFunctionalRequirementMaxId(){
+			$query = $this->db->query("SELECT IDENT_CURRENT('M_FN_REQ_DETAIL') as last_id");
+			$resultId = $query->result();
+			return $resultId[0]->last_id;
 	}
 
 	function searchLatestFunctionalRequirementVersion($functionId, $functionVersion){

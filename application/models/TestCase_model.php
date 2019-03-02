@@ -60,7 +60,7 @@ class TestCase_model extends CI_Model{
 		}
 
 		$where_condition = implode(' AND ', $where);
-
+/*
 		$sqlStr = "SELECT 
 				th.testCaseId,
 				th.testCaseNo,
@@ -72,6 +72,18 @@ class TestCase_model extends CI_Model{
 			ON th.testCaseId = td.testCaseId
 			WHERE td.activeFlag = '1'
 			AND $where_condition";
+			*/
+		$sqlStr = "SELECT 
+				th.testCaseId,
+				th.testCaseNo,
+				td.refdataId,
+				td.refdataName,
+				td.testData
+			FROM M_TESTCASE_HEADER th
+			INNER JOIN M_TESTCASE_DETAIL td
+			ON th.testCaseId = td.testCaseId
+			WHERE td.activeFlag = '1'
+			AND $where_condition";		
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
 	}

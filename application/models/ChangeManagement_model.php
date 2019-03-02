@@ -79,7 +79,7 @@ class ChangeManagement_model extends CI_Model{
 	}
 
 	function searchRelatedChangeFRInputs($param){
-		$sqlStr = "SELECT  t.functionId, d.functionId, d.inputId
+		/*$sqlStr = "SELECT  t.functionId, d.functionId, d.inputId
 			FROM T_TEMP_CHANGE_LIST t 
 			INNER JOIN M_FN_REQ_DETAIL d
 			ON t.inputId = d.inputId
@@ -89,6 +89,18 @@ class ChangeManagement_model extends CI_Model{
 			AND t.userId = $param->userId
 			AND t.functionId = $param->functionId
 			AND t.functionVersion = $param->functionVersion";
+			*/
+		$sqlStr = "SELECT  t.functionId, d.functionId, d.dataId
+			FROM T_TEMP_CHANGE_LIST t 
+			INNER JOIN M_FN_REQ_DETAIL d
+			ON t.dataId = d.dataId
+			AND d.functionId <> t.functionId
+			AND d.activeFlag = '1'
+			WHERE t.changeType IN ('edit', 'delete')
+			AND t.userId = $param->userId
+			AND t.functionId = $param->functionId
+			AND t.functionVersion = $param->functionVersion";
+			echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();	
 	}
@@ -134,13 +146,16 @@ class ChangeManagement_model extends CI_Model{
 		$tableName = !empty($param->table)? "'".$param->table."'" : "NULL";
 		$columnName = !empty($param->column)? "'".$param->column."'" : "NULL";
 
-		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion,typeData, dataName, schemaVersionId, newDataType, newDataLength, newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate) 
+		$dataLength = !empty($dataLength)? $dataLength : "NULL";
+
+		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion,typeData, dataName, schemaVersionId, newDataType, newDataLength, 
+		newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate,dataId) 
 			VALUES (
-				$param->userId, 
-				$param->functionId,
-				$param->functionVersion,
-				$param->typeData,
-				$param->dataName,
+				'$param->userId', 
+				'$param->functionId',
+				'$param->functionVersion',
+				'$param->typeData',
+				'$param->dataName',
 				$schemaVersionId,
 				$dataType,
 				$dataLength,
@@ -152,8 +167,11 @@ class ChangeManagement_model extends CI_Model{
 				$max,
 				$tableName,
 				$columnName,
-				'$param->changeType', '$param->user', '$currentDateTime')";
-
+				'$param->changeType',
+				'$param->user', 
+				'$currentDateTime',
+				'$param->dataId')";
+//echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}
