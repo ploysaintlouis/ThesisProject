@@ -57,7 +57,8 @@ class Login extends CI_Controller {
 					'Firstname' => $result->Firstname,
 					'lastname' 	=> $result->lastname, 
 					'username' 	=> $username,
-					'logged'	=> TRUE
+					'logged'	=> TRUE,
+					'staffflag' => $result->staffflag
 				);
 				$this->session->set_userdata($userSession); //create session parameter
 				redirect('index.php/Dashboard');

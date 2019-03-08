@@ -94,7 +94,7 @@ class ChangeManagement_model extends CI_Model{
 			FROM T_TEMP_CHANGE_LIST t 
 			INNER JOIN M_FN_REQ_DETAIL d
 			ON t.dataId = d.dataId
-			AND d.functionId <> t.functionId
+			AND d.functionId = t.functionId
 			AND d.activeFlag = '1'
 			WHERE t.changeType IN ('edit', 'delete')
 			AND t.userId = $param->userId
@@ -117,7 +117,6 @@ class ChangeManagement_model extends CI_Model{
 		if(!empty($param->functionVersion)){
 			$where[] = "functionVersion = $param->functionVersion";
 		}
-
 
 		if(!empty($param->lineNumber)){
 			$where[] = "lineNumber = $param->lineNumber";
@@ -993,7 +992,8 @@ class ChangeManagement_model extends CI_Model{
 		$paramSearch = (object) array(
 			'userId' => $changeInfo->userId,
 			'functionId' => $changeInfo->functionId,
-			'functionVersion' => $changeInfo->functionVersion);
+			'functionVersion' => $changeInfo->functionVersion,
+			'staffflag' => $changeInfo->staffflag);
 		$tmpChangeList = $this->searchTempFRInputChangeList($paramSearch);
 		if(0 == count($tmpChangeList)){
 			$error_message = str_replace("{0}", "Change Request", ER_MSG_016);
@@ -1138,6 +1138,48 @@ class ChangeManagement_model extends CI_Model{
 		$result = $this->db->query($sqlStr);
 		return $result->row();
 	}
-}
 
+	function updateTempFRInputChangeList($functionId, $functionVersion){
+		$this->db->trans_start(); //Starting Transaction
+		$this->db->trans_strict(FALSE);
+
+		$sql = "UPDATE T_TEMP_CHANGE_LIST
+			SET activeflag = '1'
+			WHERE functionId = $functionId 
+			AND functionVersion = $functionVersion";
+//echo $functionId;
+		$this->db->query($sql);
+		$this->db->trans_complete();
+    	$trans_status = $this->db->trans_status();
+	    if($trans_status == FALSE){
+	    	$this->db->trans_rollback();
+	    	return FALSE;
+	    }else{
+	   		$this->db->trans_commit();
+	   		return TRUE;
+	    }
+	}
+
+	private function updateApproveInputChangeList($functionId, $functionVersion){
+		$this->db->trans_start(); //Starting Transaction
+		$this->db->trans_strict(FALSE);
+
+		$sql = "UPDATE T_TEMP_CHANGE_LIST
+			SET approveflag = '1'
+			WHERE functionId = $functionId 
+			AND functionVersion = $functionVersion
+			AND activeflag = '1' ";
+
+		$this->db->query($sql);
+		$this->db->trans_complete();
+    	$trans_status = $this->db->trans_status();
+	    if($trans_status == FALSE){
+	    	$this->db->trans_rollback();
+	    	return FALSE;
+	    }else{
+	   		$this->db->trans_commit();
+	   		return TRUE;
+	    }		
+	}
+}
 ?>

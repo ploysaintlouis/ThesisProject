@@ -73,6 +73,18 @@ class ChangeManagement extends CI_Controller{
 		echo $output;
 	}
 
+	function updateTempFRChangeList($projectId,$functionId,$functionVersion){
+
+			$rowResult = $this->mChange->updateTempFRInputChangeList($functionId,$functionVersion);
+			if(0 < $rowResult){
+				echo "<script type='text/javascript'>alert('Save Successful!')</script>";
+				redirect ( "index.php/ChangeManagement/viewFunctionDetail/" + $projectId + "/" + $functionId);
+			//$this->openView($data, 'detail');
+			}else{
+				echo "error";
+			}
+	}
+
 	function doChangeProcess(){ //requestChangeFRInputs
 		$errorFlag = false;
 		$success_message = '';
@@ -128,13 +140,15 @@ class ChangeManagement extends CI_Controller{
 			if(null != $changeResult && !empty($changeResult)){
 				if('Y' == $changeResult->result->isSuccess){
 					$user = $this->session->userdata('username');
+					$staffflag = $this->session->userdata('staffflag');
 
 					$changeInfo = (object) array(
 						'userId' => $userId,
 						'projectId' => $projectId,
 						'functionId' => $functionId,
-						'functionVersion' => $functionVersion);
-echo $projectId;
+						'functionVersion' => $functionVersion,
+						'staffflag' => $staffflag);
+//echo $projectId;
 					$projectInfo = $this->mProject->searchProjectDetail($projectId);
 					$result = $this->mChange->changeProcess($changeInfo, $changeResult, $projectInfo, $user, $error_message, $changeRequestNo);
 
@@ -217,6 +231,8 @@ echo $projectId;
 		$inputChangeList = array();
 
 		$userId = $this->session->userdata('userId'); //echo $_SESSION['userId'] ;
+		$staffflag = $this->session->userdata('staffflag'); //echo $_SESSION['staffflag'] ;
+		
 		if(!empty($projectId) && !empty($functionId)){
 			$projectInfo = $this->mProject->searchProjectDetail($projectId);
 			$data['projectInfo'] = $projectInfo;
@@ -250,6 +266,7 @@ echo $projectId;
 		$data['error_message'] = $errorMessage;
 		$data['resultHeader'] = $resultHeader;
 		$data['resultDetail'] = $resultList;
+		$data['staffflag'] = $staffflag;
 		$data['inputChangeList'] = $inputChangeList;
 		$this->openView($data, 'detail');
 	}

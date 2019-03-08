@@ -237,6 +237,26 @@
 			$(document).on('click', '.confirmChangeRequest', function(){
 				$('#changeRequestForm').submit();
 			});
+/*
+			$(document).on('click', '.confirmChange', function(){
+				var functionId = $('input[name=functionId]').val();
+				var functionVersion = $('input[name=functionVersion]').val();
+				$.ajax({
+					url:"<?php echo base_url(); ?>index.php/ChangeManagement/updateTempFRChangeList/",
+					method:"POST",
+					data:{functionId: functionId, functionVersion: functionVersion},
+					success:function(data){
+						alert(data);
+						if("Y" == data){
+							$('#confirm_change_modal').modal('show');
+						}else{
+							$('#changeRequestForm').submit();
+						}
+						return false;
+					}
+				});	
+			});
+*/
 			//**************************[End: Change Management]*************************
 
 

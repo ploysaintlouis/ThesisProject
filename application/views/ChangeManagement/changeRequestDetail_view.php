@@ -198,7 +198,7 @@
 													$value['typeData'] = '2';
 												}	?>											
                 									<?php $keyId = $projectInfo->projectId."|".$value['dataId']."|".$value['schemaVersionId']."|".$hfield['functionId']."|".$value['typeData']; ?>
-												
+													<input type="hidden" name="projectId" id="projectId" value="<?php echo $value['projectId']; ?>">
                 								<button type="button" name="edit" id="<?php echo $keyId; ?>" class="btn btn-warning btn-xs view" >Edit</button> 
 													<button type="button" name="delete" id="<?php echo $keyId; ?>" class="btn btn-danger btn-xs delete" >Delete</button>
 
@@ -274,10 +274,12 @@
 	                					</tbody>
 	                				</table>
 									<div class="box-body" align="right">
-										<button type="button" name="confirmChange" id="confirmChange" class="btn btn-primary" style="margin-top: -10px;">
+										<button type="button" name="confirmChange" id="confirmChange" class="btn btn-primary" style="margin-top: -10px;" onclick="mst001Save()">
 										<i class="fa fa-save"></i> Confirm
 										</button>
 									</div>		
+									<input type="hidden" name="functionId" id="functionId" value="<?php echo $value['functionId']; ?>">
+            						<input type="hidden" name="functionVersion" id="functionVersion" value="<?php echo $value['functionVersion']; ?>">
 	                			</div>
 	                		</div>
 	                	</div>
@@ -290,6 +292,21 @@
                 	</button>
                 </div>
 				<?php } ?>
+
+				<script type="text/javascript">
+					function mst001Save(){
+						var msg = "Are you sure to Confirm Change?";
+						if(confirm(msg)){
+							var projectId = $('#projectId').val();
+							var functionId = $('#functionId').val();
+							var functionVersion = $('#functionVersion').val();
+							window.location  = baseUrl + "index.php/ChangeManagement/updateTempFRChangeList/"+projectId+"/"+functionId+"/"+functionVersion;
+						}else{
+							return false;
+						}
+					}
+				</script>
+
 
                 <!-- Start: Modal -->
                 <div class="modal fade" id="confirm_change_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
