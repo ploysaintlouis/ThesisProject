@@ -270,19 +270,26 @@
 				               						</td>
 				               					</tr>
 			               					<?php endforeach; ?>
-	                						<?php } ?>
+	                						<?php }  ?>
 	                					</tbody>
 	                				</table>
+									<div class="box-body" align="right">
+										<button type="button" name="confirmChange" id="confirmChange" class="btn btn-primary" style="margin-top: -10px;">
+										<i class="fa fa-save"></i> Confirm
+										</button>
+									</div>		
 	                			</div>
 	                		</div>
 	                	</div>
 	                </div>
                 </div>
+				<?php if ( 3 == $staffflag){ ?>
                 <div align="right">
                 	<button type="button" class="btn btn-primary sumbitChangeRequest" style="margin-top: -10px;">
                 		<i class="fa fa-save"></i> Submit
                 	</button>
                 </div>
+				<?php } ?>
 
                 <!-- Start: Modal -->
                 <div class="modal fade" id="confirm_change_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
