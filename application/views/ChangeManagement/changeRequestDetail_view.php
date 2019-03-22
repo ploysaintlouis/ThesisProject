@@ -273,11 +273,13 @@
 	                						<?php }  ?>
 	                					</tbody>
 	                				</table>
+									<?php $var = ('1' == $value['confirmflag'])? 'disabled' : ''; ?>
 									<div class="box-body" align="right">
-										<button type="button" name="confirmChange" id="confirmChange" class="btn btn-primary" style="margin-top: -10px;" onclick="mst001Save()">
+										<button type="button" name="confirmChange" id="confirmChange" class="btn btn-primary" style="margin-top: -10px;" onclick="mst001Save()" <?php echo $var;?>>
 										<i class="fa fa-save"></i> Confirm
 										</button>
 									</div>		
+									
 									<input type="hidden" name="functionId" id="functionId" value="<?php echo $value['functionId']; ?>">
             						<input type="hidden" name="functionVersion" id="functionVersion" value="<?php echo $value['functionVersion']; ?>">
 	                			</div>
@@ -286,8 +288,9 @@
 	                </div>
                 </div>
 				<?php if ( 3 == $staffflag){ ?>
+				<?php $var = ('1' == $value['approveflag'])? 'disabled' : ''; ?>
                 <div align="right">
-                	<button type="button" class="btn btn-primary sumbitChangeRequest" style="margin-top: -10px;">
+                	<button type="button" class="btn btn-primary sumbitChangeRequest" style="margin-top: -10px;" <?php echo $var;?>>
                 		<i class="fa fa-save"></i> Submit
                 	</button>
                 </div>

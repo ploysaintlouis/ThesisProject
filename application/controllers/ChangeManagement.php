@@ -78,8 +78,9 @@ class ChangeManagement extends CI_Controller{
 			$rowResult = $this->mChange->updateTempFRInputChangeList($functionId,$functionVersion);
 			if(0 < $rowResult){
 				echo "<script type='text/javascript'>alert('Save Successful!')</script>";
-				redirect ( "index.php/ChangeManagement/viewFunctionDetail/" + $projectId + "/" + $functionId);
-			//$this->openView($data, 'detail');
+				//redirect ( "index.php/ChangeManagement/viewFunctionDetail/" + $projectId + "/" + $functionId);
+				//$url = "index.php/ChangeManagement/viewFunctionDetail/" + $projectId + "/" + $functionId;
+				$this->reloadPage('', $projectId, $functionId,$functionVersion);
 			}else{
 				echo "error";
 			}
@@ -98,7 +99,7 @@ class ChangeManagement extends CI_Controller{
 		$functionVersion = $this->input->post('functionVersion');
 
 		//$this->load->library('common');
-		
+		//echo $functionId;
 		try{
 			/** 1.Validate
 			*** 1.1 Check Temp Change List Data
@@ -1157,7 +1158,16 @@ class ChangeManagement extends CI_Controller{
 			'password' 		=> $projectInfo->password);
 		
 		//2. All Functional Requirements Header data
-		$criteria = (object) array('projectId' => $param->projectId, 'status' => '1');
+		/*$criteria = (object) array('projectId' => $param->projectId, 'status' => '1');
+		$frHeaderList = $this->mFR->searchFunctionalRequirementHeaderInfo($criteria);
+		foreach($frHeaderList as $value){
+			$allFRHeader[$value['functionNo']] = array(
+				'functionVersion' 	=> $value['functionVersion'], 
+				'functionDesc' 		=> $value['fnDesc']);
+		}
+		$passData['FRHeader'] = $allFRHeader;*/
+
+		$criteria = (object) array('projectId' => $param->projectId, 'status' => '1','functionId' => $param->functionId);
 		$frHeaderList = $this->mFR->searchFunctionalRequirementHeaderInfo($criteria);
 		foreach($frHeaderList as $value){
 			$allFRHeader[$value['functionNo']] = array(
@@ -1181,7 +1191,8 @@ class ChangeManagement extends CI_Controller{
 				'min' 			=> $value['constraintMinValue'],
 				'max' 			=> $value['constraintMaxValue'],
 				'tabelName' 	=> $value['refTableName'],
-				'columnName' 	=> $value['refColumnName']);		
+				'columnName' 	=> $value['refColumnName'],
+				'typeData'		=> $value['typeData']);		
 			}
 		}
 		$passData['FRDetail'] = $allFRDetail;
@@ -1207,22 +1218,25 @@ class ChangeManagement extends CI_Controller{
 		//6. All RTM data
 		$rtmList = $this->mRTM->searchRTMInfoByCriteria($param->projectId);
 		foreach($rtmList as $value){
-			$allRTM = array('functionNo' => $value['functionNo'], 'testCaseNo' => $value['testCaseversion'],'testCaseversion' => $value['testCaseNo'],'functionversion' => $value['functionversion']);
+			$allRTM = array('functionId' => $value['functionId'], 'testCaseNo' => $value['testCaseNo'],'testCaseversion' => $value['testCaseversion'],'functionversion' => $value['functionversion']);
 		}
 		$passData['RTM'] = $allRTM;
 
+			//echo $passData['RTM']['testCaseNo'];
 		//7. Change Request Information
 		$modifyFlag = EDIT_FLAG_ENABLE;
 
 		$criteria->userId = $param->userId;
 		$criteria->functionId = $param->functionId;
 		$criteria->functionVersion = $param->functionVersion;
+		// $criteria->functionVersion;
 		$changeFRInputsList = $this->mChange->searchTempFRInputChangeList($criteria);
-		
+		//echo $changeFRInputsList['dataName'];
+
 		$changeList = array(
 			'functionNo' => $param->functionNo, 
 			'functionVersion' => $param->functionVersion);
-		
+			
 		foreach($changeFRInputsList as $value){
 			$changeList['inputs'][] = array(
 				'changeType' 	=> $value['changeType'],
@@ -1242,12 +1256,13 @@ class ChangeManagement extends CI_Controller{
 				'modifyFlag' 	=> $modifyFlag
 			);
 		}
+
 		$passData['changeRequestInfo'] = $changeList;
 
 		$url = 'http://localhost:81/StubService/ChangeAPI.php';
 
-		//$json = json_decode($this->common->postCURL($url, $passData));
-		
+		$json = json_decode($this->common->postCURL($url, $passData));
+		//echo $json;
 		$this->writeJsonFile($passData, $json, $param->functionId);
 
 		return $json;

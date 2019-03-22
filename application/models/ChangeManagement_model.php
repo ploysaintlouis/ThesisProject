@@ -54,6 +54,7 @@ class ChangeManagement_model extends CI_Model{
 			FROM T_TEMP_CHANGE_LIST
 			WHERE $where_clause
 			ORDER BY lineNumber";
+			
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
 	}
@@ -97,6 +98,7 @@ class ChangeManagement_model extends CI_Model{
 			AND d.functionId = t.functionId
 			AND d.activeFlag = '1'
 			WHERE t.changeType IN ('edit', 'delete')
+			AND t.confirmflag = '1'
 			AND t.userId = $param->userId
 			AND t.functionId = $param->functionId
 			AND t.functionVersion = $param->functionVersion";
@@ -1144,7 +1146,7 @@ class ChangeManagement_model extends CI_Model{
 		$this->db->trans_strict(FALSE);
 
 		$sql = "UPDATE T_TEMP_CHANGE_LIST
-			SET activeflag = '1'
+			SET confirmflag = '1'
 			WHERE functionId = $functionId 
 			AND functionVersion = $functionVersion";
 //echo $functionId;

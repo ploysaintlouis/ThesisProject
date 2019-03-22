@@ -56,7 +56,7 @@ class TestCase_model extends CI_Model{
 		}
 
 		if(!empty($refInputId)){
-			$where[] = "td.refInputId = $refInputId";
+			$where[] = "td.refdataId = $refdataId";
 		}
 
 		$where_condition = implode(' AND ', $where);
