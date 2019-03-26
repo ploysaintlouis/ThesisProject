@@ -34,11 +34,13 @@ class Common {
 		return $value; 
 	}
 
-	function postCURL($_url, $_param){        
+	function postCURL($_url, $_param){   
+		//var_dump($_param['RTM']['functionId']);     
         $this->http_build_query_for_curl($_param, $postData);
         
-        //test
-       	//var_dump($postData);
+		//test
+		//var_dump($postData);
+       	var_dump($postData['connectDatabaseInfo[databaseName]']);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $_url);
@@ -66,7 +68,11 @@ class Common {
 	            $this->http_build_query_for_curl( $value, $new, $k );
 	        } else {
 	            $new[$k] = $value;
-	        }
+			}
+			//echo $k;
+			//echo $value[0];
+			//echo $new[$k];
+			//echo $key[1];
 	    }
 	}
 
