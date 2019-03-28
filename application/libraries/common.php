@@ -40,19 +40,22 @@ class Common {
         
 		//test
 		//var_dump($postData);
-       	var_dump($postData['connectDatabaseInfo[databaseName]']);
+       	var_dump($postData);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $_url);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+		
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
-
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json"));
+		//curl_error($ch)
         //test
         //echo (is_callable('curl_init')) ? '<h1>Enabled</h1>' : '<h1>Not enabled</h1>' ;
-        
-        $output = curl_exec($ch);
+		
+		//curl_exec($curlResource);
+		$output = curl_exec($ch);
+		curl_error($ch);
         curl_close($ch);
         return $output;
     }

@@ -18,7 +18,6 @@ class ChangeManagement extends CI_Controller{
 
 		$this->load->library('form_validation', null, 'FValidate');
 		$this->load->library('session');
-		//$this->load->library('PHPRequests');
 	}
 
 	public function index(){
@@ -1264,10 +1263,7 @@ class ChangeManagement extends CI_Controller{
 		$url = 'http://localhost:81/ThesisProject/index.php/ChangeAPI.php';
 
 		$json = json_decode($this->common->postCURL($url, $passData));
-		
-echo "<pre>";
-print_r($json);
-echo "</pre>";
+		echo $json;
 		$this->writeJsonFile($passData, $json, $param->functionId);
 
 		return $json;

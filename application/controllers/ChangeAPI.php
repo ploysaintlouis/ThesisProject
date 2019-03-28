@@ -1,66 +1,34 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+header("Content-Type:application/json");
 
-//require(APPPATH.'libraries/REST_Controller.php');
-require(APPPATH.'libraries/Format.php');
-use ThesisProject\Libraries\REST_Controller;
+$data = json_decode(file_get_contents('php://input'), true);
+echo json_encode($data);
 
-class ChangeAPI extends REST_Controller
-{
-    function __construct(){
-        parent:: __construct();
-
-        $this->load->library('session');
-    }
-
-    public function index_get()
-    {
-        $data = array(
-            array(
-                "id"=>1,
-                "topic"=>"หัวข้อข่าวที่ 1"
-            ),
-            array(
-                "id"=>2,
-                "topic"=>"หัวข้อข่าวที่ 2"
-            ),
-            array(
-                "id"=>3,
-                "topic"=>"หัวข้อข่าวที่ 3"
-            ),
-        );
-
-        $query = "SELECT * FROM m_users";
-        $result = $this->db->query($query);
-
-        if($result->num_rows() > 0){
-            foreach($result->result_array() as $row)
-            {
-                echo $row['userId'];
-                echo $row['Firstname'];
+if (isset($_GET['projectInfo']) && $_GET['projectInfo']!="") {
+/*
+            $strsql = "SELECT * FROM M_PROJECT where projectId = '$projectInfo' ";
+            echo $strsql;
+            $objQuery = $this->db->query($strsql);
+            if(!$objQuery){
+                echo "<script language='javascript'>alert('Code Correct.');</script>";
             }
-        }
-       $this->response($data, 200);
-        return $result;
-        // แสดงรายการข่าวทั้งหมด
-    }
-
-    public function index_post()
-    {
-        // สร้างรายการใหม่
-    }
-  
-    public function index_put()
-    {
-        // แก้ไขรายการ
-    }
-  
-    public function index_delete()
-    {
-        // ลบรายการ
-    }
- 
+            return $objQuery->result_array();	*/
+}else{
+            response(NULL, NULL, 400,"Invalid Request");
 }
-
+function response($order_id,$amount,$response_code,$response_desc){
+	/*$response['order_id'] = $order_id;
+	$response['amount'] = $amount;
+	$response['response_code'] = $response_code;
+	$response['response_desc'] = $response_desc;*/
+	$response['order_id'] = "1";
+	$response['amount'] = "2";
+	$response['response_code'] = "3";
+	$response['response_desc'] = $response_desc;
+	
+	$json_response = json_encode($response);
+	echo $json_response;
+}
 ?>
