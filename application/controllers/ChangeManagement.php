@@ -1259,10 +1259,9 @@ class ChangeManagement extends CI_Controller{
 
 		$passData['changeRequestInfo'] = $changeList;
 
-		//$url = 'http://localhost:81/StubService/ChangeAPI.php';
-		$url = 'http://localhost:81/ThesisProject/index.php/ChangeAPI.php';
+		$url = 'http://localhost:81/StubService/ChangeAPI.php';
 
-		$json = json_decode($this->common->postCURL($url, $passData));
+		$json = $this->common->postCURL($url, $passData);
 		echo $json;
 		$this->writeJsonFile($passData, $json, $param->functionId);
 
