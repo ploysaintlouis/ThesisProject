@@ -50,6 +50,7 @@ class FunctionalRequirement_model extends CI_Model {
 			ON FRH.functionId = FRV.functionId 
 			WHERE $where_clause 
 			ORDER BY FRH.functionNo, FRV.functionVersionNumber";
+			//echo $queryStr;
 		$result = $this->db->query($queryStr);
 		return $result->result_array();
 	}
@@ -154,7 +155,7 @@ class FunctionalRequirement_model extends CI_Model {
 		i.constraintMaxValue
 	   FROM M_FN_REQ_DETAIL i
 	   where $where_clause";
-	   //echo $sqlStr;
+	  // echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $result->row_array();
 	}
@@ -185,7 +186,7 @@ class FunctionalRequirement_model extends CI_Model {
 			ON h.functionId = d.functionId
 			AND d.activeFlag = '1'
 			WHERE $where_clause";
-echo $queryStr;
+//echo $queryStr;
 		$result = $this->db->query($queryStr);
 		return $result->result_array();
 	}
@@ -565,6 +566,17 @@ echo $queryStr;
 		$sqlStr = "DELETE FROM M_FN_REQ_INPUT
 			WHERE inputId = $param->inputId
 			AND activeFlag = '1'";
+
+		$result = $this->db->query($sqlStr);
+		return $this->db->affected_rows();
+	}
+
+	function schemaVersionIdFunctionalRequirementInput($param){
+		$sqlStr = "	select schemaVersionId 
+					from M_FN_REQ_DETAIL
+					where refColumnName = $param->columnName
+					and refTableName = $param->tableName
+					and activeflag = '1' ";
 
 		$result = $this->db->query($sqlStr);
 		return $this->db->affected_rows();

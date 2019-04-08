@@ -198,9 +198,10 @@
 													$value['typeData'] = '2';
 												}	?>											
                 									<?php $keyId = $projectInfo->projectId."|".$value['dataId']."|".$value['schemaVersionId']."|".$hfield['functionId']."|".$value['typeData']; ?>
+
 													<input type="hidden" name="projectId" id="projectId" value="<?php echo $value['projectId']; ?>">
-                								<button type="button" name="edit" id="<?php echo $keyId; ?>" class="btn btn-warning btn-xs view" >Edit</button> 
-													<button type="button" name="delete" id="<?php echo $keyId; ?>" class="btn btn-danger btn-xs delete" >Delete</button>
+                									<button type="button" name="edit" id="<?php echo $keyId; ?>" class="btn btn-warning btn-xs view" >Edit</button> 
+													<button type="button" name="delete" id="<?php echo $keyId; ?>" class="btn btn-danger btn-xs delete" >Delete</button> <!-- bug ไม่ส่ง keyid บ้างปุ่ม
 
                 									<!-- <a href="#"><span class="label label-primary">Edit</span></a>
                 									<a href="#"><span class="label label-danger">Delete</span></a> -->
@@ -272,7 +273,8 @@
 			               					<?php endforeach; ?>
 	                						<?php }  ?>
 	                					</tbody>
-	                				</table>
+	                				</table
+
 									<?php $var = ('1' == $value['confirmflag'])? 'disabled' : ''; ?>
 									<div class="box-body" align="right">
 										<button type="button" name="confirmChange" id="confirmChange" class="btn btn-primary" style="margin-top: -10px;" onclick="mst001Save()" <?php echo $var;?>>

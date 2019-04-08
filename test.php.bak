@@ -14,4 +14,6 @@ die( print_r( sqlsrv_errors(), true));
 }
 	$sqlStr = "select stockname from stock";
 $stmt = sqlsrv_query( $conn, $sqlStr);    
+echo "HHHHHHH";
+phpinfo();
 ?>

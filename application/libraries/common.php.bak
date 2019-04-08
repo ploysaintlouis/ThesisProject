@@ -39,7 +39,7 @@ class Common {
         $this->http_build_query_for_curl($_param, $postData);
         
 		//test
-		//var_dump($postData);
+		var_dump($postData);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $_url);

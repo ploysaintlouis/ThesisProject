@@ -76,22 +76,30 @@
 				});
 			});
 
-			$(document).on('click', '.delete', function(){
+			$(document).on('click', '.delete', function()
+			{
 				var msg = "Are you sure to delete this functional requirement's input?";
 				
-				if(confirm(msg)){
+				if(confirm(msg))
+				{
 					var keyId = $(this).attr("id");
 					var functionId = $('input[name=functionId]').val();
 					var functionVersion = $('input[name=functionVersion]').val();
 
-					$.ajax({
+					$.ajax(
+						{
 						url:"<?php echo base_url(); ?>index.php/ChangeManagement/saveTempFRInput_delete/",
 						method:"POST",
-						data:{keyId: keyId, functionId: functionId, functionVersion: functionVersion},
-						success:function(data){
-							if("" != data){
+						
+					  data:{keyId: keyId, functionId: functionId, functionVersion: functionVersion},
+						
+						success:function(data)
+						{
+							if("" != data)
+							{
 								var result = data.split("|");
-								if("error" == result[0]){
+								if("error" == result[0])
+								{
 									alert(result[1]);
 									return false;
 								}else{
@@ -100,7 +108,7 @@
 							}
 							return false;
 						}
-					});
+						});
 				}
 			});
 

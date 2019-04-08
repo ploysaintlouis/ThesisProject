@@ -54,7 +54,7 @@ class ChangeManagement_model extends CI_Model{
 			FROM T_TEMP_CHANGE_LIST
 			WHERE $where_clause
 			ORDER BY lineNumber";
-			
+			//echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
 	}
@@ -102,7 +102,7 @@ class ChangeManagement_model extends CI_Model{
 			AND t.userId = $param->userId
 			AND t.functionId = $param->functionId
 			AND t.functionVersion = $param->functionVersion";
-			echo $sqlStr;
+			//echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();	
 	}
@@ -150,7 +150,7 @@ class ChangeManagement_model extends CI_Model{
 		$dataLength = !empty($dataLength)? $dataLength : "NULL";
 
 		$sqlStr = "INSERT INTO T_TEMP_CHANGE_LIST (userId, functionId, functionVersion,typeData, dataName, schemaVersionId, newDataType, newDataLength, 
-		newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate,dataId) 
+		newScaleLength, newUnique, newNotNull, newDefaultValue, newMinValue, newMaxValue, tableName, columnName, changeType, createUser, createDate,dataId,confirmflag,approveflag) 
 			VALUES (
 				'$param->userId', 
 				'$param->functionId',
@@ -171,8 +171,10 @@ class ChangeManagement_model extends CI_Model{
 				'$param->changeType',
 				'$param->user', 
 				'$currentDateTime',
-				'$param->dataId')";
-//echo $sqlStr;
+				'$param->dataId',
+				NULL,
+				NULL)";
+echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}

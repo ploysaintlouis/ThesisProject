@@ -274,6 +274,11 @@ class ChangeManagement extends CI_Controller{
 
 	function addFRInputDetail(){
 		$output = '';
+		var_dump($this->input->post('projectId'));
+		var_dump($this->input->post('functionId'));
+		var_dump($this->input->post('functionVersion'));
+		var_dump($this->input->post('schemaVersionId'));
+	
 		$projectId = $this->input->post('projectId');
 		$functionId = $this->input->post('functionId');
 		$functionVersion = $this->input->post('functionVersion');
@@ -373,6 +378,8 @@ class ChangeManagement extends CI_Controller{
 			<input type="hidden" name="oldMax" 	id="oldMax" value="'.$row["constraintMaxValue"].'">
 			<input type="hidden" id="oldNotNullValue" name="oldNotNullValue" value="'.$row["constraintNull"].'">
 			<input type="hidden" id="oldUniqueValue" name="oldUniqueValue" value="'.$row["constraintUnique"].'">
+			<input type="hidden" id="inputTableName" name="inputTableName" value="'.$row["refTableName"].'">
+			<input type="hidden" id="inputColumnName" name="inputColumnName" value="'.$row["refColumnName"].'">
 
 			<table style="width:100%">
 			<tr height="40">
@@ -472,9 +479,6 @@ class ChangeManagement extends CI_Controller{
 					<p class="text-green" style="margin:0;">'.$row["refTableName"].'</p>
 					</label>
 				</td>
-				<td>
-					<input type="text" id="inputTableName" name="inputTableName" class="form-control" style="display:'.$displayFlag.'"/>
-				</td>
 			</tr>
 			<tr height="40">
 				<td>
@@ -482,146 +486,154 @@ class ChangeManagement extends CI_Controller{
 					<p class="text-green" style="margin:0;">'.$row["refColumnName"].'</p>
 					</label>
 				</td>
-				<td>
-					<input type="text" id="inputColumnName" name="inputColumnName" class="form-control" style="display:'.$displayFlag.'"/>
-				</td>
 			</tr>
 			</table>';
-	}else {
-		$output = '
-			<input type="hidden" name="changeProjectId" id="changeProjectId" value="'.$row["projectId"].'">
-			<input type="hidden" name="changeType" id="changeType" value="'.$mode.'">
-			<input type="hidden" name="changeFunctionId" id="changeFunctionId" value="'.$row["functionId"].'">
-			<input type="hidden" name="changeFunction" id="changeFunction" value="'.$row["functionVersion"].'">
-
-			<input type="hidden" name="changeSchemaVersionId" id="changeSchemaVersionId"  value="'.$row["schemaVersionId"].'">
-			<input type="hidden" name="userId" id="userId"  value="'.$_SESSION['userId'].'">
-			<input type="hidden" name="user" id="user"  value="'.$_SESSION['username'].'">
-			<input type="hidden" name="changedataId" id="changedataId" value="'.$row["dataId"].'">
-
-			<table style="width:100%">
-			<tr height="40">
+		}else {
+			$output = '
+				<input type="hidden" name="changeProjectId" id="changeProjectId" value="'.$row["projectId"].'">
+				<input type="hidden" name="changeType" id="changeType" value="'.$mode.'">
+				<input type="hidden" name="changeFunctionId" id="changeFunctionId" value="'.$row["functionId"].'">
+				<input type="hidden" name="changeFunction" id="changeFunction" value="'.$row["functionVersion"].'">
+				<input type="hidden" name="changedataId" id="changedataId" value="'.$row["dataId"].'">
 	
-				<td>
-					<div class="radio">
-						<label style="font-weight:700;">
-						<input type="radio" id="changetypeData" name="changetypeData" value="1">Input Name
-						</label>
-
-						&nbsp;&nbsp;
-						
-						<label style="font-weight:700;">
-						<input type="radio" id="changetypeData" name="changetypeData" value="2">Output Name
-						</label>
-
-					</div>
-				</td>	
-				<td>'.$row["typeData"].'
-					<input type="text" name="dataName" id="dataName" class="form-control" style="display:'.$displayFlag.'" maxlength="'.MAX_INPUT_NAME.'" />
-				</td>	
-			</tr>
-			<tr height="40">
-				<td>
-					<label>Data Type: '.$requiredField.'
-					<p class="text-green" style="margin:0;"></p>
-					</label>
-				</td>
-				<td>
-					'.$dataTypeCombo.'
-				</td>
-			</tr>
-			<tr height="40">
-				<td>
-					<label>Data Length: 
-					<p class="text-green" style="margin:0;"></p>
-					</label>
-				</td>
-				<td>
-					<input type="number" min="1" step="1" name="inputDataLength" id="inputDataLength" class="form-control"/>
-				</td>
-			</tr>
-			<tr height="40">
-				<td>
-					<label>Scale (if any*)
-					<p class="text-green" style="margin:0;"></p>
-					</label>
-				</td>
-				<td>
-					<input type="number" min="1" step="1" name="inputScale" id="inputScale" class="form-control" placeholder="Enter when data Type is \'Decimal\'"/>
-				</td>
-			</tr>
-			<tr height="40">
-				<td>&nbsp;</td>
-				<td>
-					<div class="checkbox">
-						<label style="font-weight:700;">
-						<input type="checkbox" id="inputUnique" name="inputUnique[]" value="'.$checkUnique.'" >Unique
+				<input type="hidden" name="changeSchemaVersionId" id="changeSchemaVersionId" value="1">
+	
+				<input type="hidden" name="userId" id="userId"  value="'.$_SESSION['userId'].'">
+				<input type="hidden" name="user" id="user"  value="'.$_SESSION['username'].'">
+	
+				<input type="hidden" name="oldDataType" id="oldDataType"	value="'.$row["dataType"].'">
+				<input type="hidden" name="oldDataLength" id="oldDataLength"	value="'.$row["dataLength"].'">
+				<input type="hidden" name="oldScale" 	id="oldScale"	value="'.$row["decimalPoint"].'">
+				<input type="hidden" name="oldDefaultValue" id="oldDefaultValue" value="'.$row["constraintDefault"].'">
+				<input type="hidden" name="oldMin" id="oldMin"	value="'.$row["constraintMinValue"].'">
+				<input type="hidden" name="oldMax" 	id="oldMax" value="'.$row["constraintMaxValue"].'">
+				<input type="hidden" id="oldNotNullValue" name="oldNotNullValue" value="'.$row["constraintNull"].'">
+				<input type="hidden" id="oldUniqueValue" name="oldUniqueValue" value="'.$row["constraintUnique"].'">
+	
+				<table style="width:100%">
+				<tr height="40">
+		
+					<td>
+						<div class="radio">
+							<label style="font-weight:700;">
+							<input type="radio" id="changetypeData" name="changetypeData" value="1">Input Name
+							</label>
+	
+							&nbsp;&nbsp;
+							
+							<label style="font-weight:700;">
+							<input type="radio" id="changetypeData" name="changetypeData" value="2">Output Name
+							</label>
+	
+						</div>
+					</td>	
+					<td>'.$row["typeData"].'
+						<input type="text" name="dataName" id="dataName" class="form-control" style="display:'.$displayFlag.'" maxlength="'.MAX_INPUT_NAME.'" />
+					</td>	
+				</tr>
+				<tr height="40">
+					<td>
+						<label>Data Type: '.$requiredField.'
 						<p class="text-green" style="margin:0;"></p>
 						</label>
-
-						&nbsp;&nbsp;
-						
-						<label style="font-weight:700;">
-						<input type="checkbox" id="inputNotNull" name="inputNotNull[]" value="'.$checkNotNull.'" >NOT NULL
+					</td>
+					<td>
+						'.$dataTypeCombo.'
+	
+					</td>
+				</tr>
+				<tr height="40">
+					<td>
+						<label>Data Length: 
 						<p class="text-green" style="margin:0;"></p>
 						</label>
-					</div>
-				</td>
-			</tr>
-			<tr height="40">
-				<td>
-					<label>Default Value:
-					<p class="text-green" style="margin:0;"></p>
-					</label>
-				</td>
-				<td>
-					<input type="text" id="inputDefault" name="inputDefault" class="form-control"/>
-				</td>
-			</tr>
-			<tr height="40">
-				<td>
-					<label>Min Value:
-					<p class="text-green" style="margin:0;"></p>
-					</label>
-				</td>
-				<td>
-					<input type="number" step="0.01" id="inputMinValue" name="inputMinValue" class="form-control"/>
-				</td>
-			</tr>
-			<tr height="40">
-				<td>
-					<label>Max Value:
-					<p class="text-green" style="margin:0;"></p>
-					</label>
-				</td>
-				<td>
-					<input type="number" step="0.01" id="inputMaxValue" name="inputMaxValue" class="form-control"/>
-				</td>
-			</tr>
-			<tr height="40">
-				<td>
-					<label>Table Name:
-					<p class="text-green" style="margin:0;"></p>
-					</label>
-				</td>
-				<td>
-					<input type="text" id="inputTableName" name="inputTableName" class="form-control" />
-				</td>
-			</tr>
-			<tr height="40">
-				<td>
-					<label>Column Name:
-					<p class="text-green" style="margin:0;"></p>
-					</label>
-				</td>
-				<td>
-					<input type="text" id="inputColumnName" name="inputColumnName" class="form-control"/>
-				</td>
-			</tr>
-			</table>';
+					</td>
+					<td>
+						<input type="number" min="1" step="1" name="inputDataLength" id="inputDataLength" class="form-control"/>
+					</td>
+				</tr>
+				<tr height="40">
+					<td>
+						<label>Scale (if any*)
+						<p class="text-green" style="margin:0;"></p>
+						</label>
+					</td>
+					<td>
+						<input type="number" min="1" step="1" name="inputScale" id="inputScale" class="form-control" placeholder="Enter when data Type is \'Decimal\'"/>
+					</td>
+				</tr>
+				<tr height="40">
+					<td>&nbsp;</td>
+					<td>
+						<div class="checkbox">
+							<label style="font-weight:700;">
+							<input type="checkbox" id="inputUnique" name="inputUnique[]" value="'.$checkUnique.'" >Unique
+							<p class="text-green" style="margin:0;"></p>
+							</label>
+	
+							&nbsp;&nbsp;
+							
+							<label style="font-weight:700;">
+							<input type="checkbox" id="inputNotNull" name="inputNotNull[]" value="'.$checkNotNull.'" >NOT NULL
+							<p class="text-green" style="margin:0;"></p>
+							</label>
+						</div>
+					</td>
+				</tr>
+				<tr height="40">
+					<td>
+						<label>Default Value:
+						<p class="text-green" style="margin:0;"></p>
+						</label>
+					</td>
+					<td>
+						<input type="text" id="inputDefault" name="inputDefault" class="form-control"/>
+					</td>
+				</tr>
+				<tr height="40">
+					<td>
+						<label>Min Value:
+						<p class="text-green" style="margin:0;"></p>
+						</label>
+					</td>
+					<td>
+						<input type="number" step="0.01" id="inputMinValue" name="inputMinValue" class="form-control"/>
+					</td>
+				</tr>
+				<tr height="40">
+					<td>
+						<label>Max Value:
+						<p class="text-green" style="margin:0;"></p>
+						</label>
+					</td>
+					<td>
+						<input type="number" step="0.01" id="inputMaxValue" name="inputMaxValue" class="form-control"/>
+					</td>
+				</tr>
+				<tr height="40">
+					<td>
+						<label>Table Name:
+						<p class="text-green" style="margin:0;"></p>
+						</label>
+					</td>
+					<td>
+						<input type="text" id="inputTableName" name="inputTableName" class="form-control" />
+					</td>
+				</tr>
+				<tr height="40">
+					<td>
+						<label>Column Name:
+						<p class="text-green" style="margin:0;"></p>
+						</label>
+					</td>
+					<td>
+						<input type="text" id="inputColumnName" name="inputColumnName" class="form-control"/>
+					</td>
+				</tr>
+				</table>';
+			}
+			return $output;
 		}
-		return $output;
-	}
 
 	function saveTempFRInput_edit(){
 		$output = '';
@@ -768,7 +780,6 @@ class ChangeManagement extends CI_Controller{
 	function saveTempFRInput_delete(){
 		$output = '';
 		
-		//var_dump($keyId);
 		if(!empty($_POST)){
 			$keyList = explode("|", $this->input->post('keyId'));
 
@@ -778,9 +789,16 @@ class ChangeManagement extends CI_Controller{
 			$dataId = $keyList[1];
 			$typeData = $keyList[4];
 			$schemaVersionId = $keyList[2];
+			//$functionId = $keyList[3];
 
 			$user = $this->session->userdata('username');
-
+/*
+			var_dump($this->input->post('keyId'));
+			var_dump($this->input->post('functionId'));
+			var_dump($this->input->post('functionVersion'));
+			var_dump($keyList[1]);
+			var_dump(	$typeData );
+			var_dump($schemaVersionId );*/
 			//validate check exist
 			$criteria = (object) array(
 				'userId' => $userId,
@@ -792,7 +810,17 @@ class ChangeManagement extends CI_Controller{
 			$records = $this->mChange->searchTempFRInputChangeList($criteria);
 			if(0 == count($records)){
 				$inputInfo = $this->mFR->searchFRInputDetailByCriteria($criteria);
-
+				echo $inputInfo['dataName'];
+				echo $inputInfo['dataType'];
+				echo $inputInfo['dataLength'];
+				echo $inputInfo['decimalPoint'];
+				echo $inputInfo['constraintUnique'];
+				echo $inputInfo['constraintNull'];
+				echo $inputInfo['constraintDefault'];
+				echo $inputInfo['constraintMinValue'];
+				echo $inputInfo['constraintMaxValue'];
+				echo $inputInfo['refTableName'];
+				echo $inputInfo['refColumnName'];
 				$param = (object) array(
 					'userId' => $userId,
 					'functionId' => $functionId,
@@ -824,6 +852,8 @@ class ChangeManagement extends CI_Controller{
 				$output = 'error|'.ER_TRN_001;
 			}
 		}
+		return false;
+
 	}
 
 	function deleteTempFRInputList(){
@@ -1259,7 +1289,8 @@ class ChangeManagement extends CI_Controller{
 
 		$passData['changeRequestInfo'] = $changeList;
 
-		$url = 'http://localhost:81/StubService/ChangeAPI.php';
+		//$url = 'http://localhost:81/StubService/ChangeAPI.php';
+		$url = 'http://localhost:81/Stubservice/ChangeAPI.php';
 
 		$json = $this->common->postCURL($url, $passData);
 		echo $json;
