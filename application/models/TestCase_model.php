@@ -10,18 +10,25 @@ class TestCase_model extends CI_Model{
 		parent::__construct();
 	}
 
-	function searchTestCaseInfoByCriteria($projectId, $testCaseStatus){
+	function searchTestCaseInfoByCriteria($projectId, $testCaseStatus,$testCaseNo,$testCaseVersion){
 		$where[] = "th.projectId = ".$projectId." ";
-		if("2" != $testCaseStatus)
+		if("2" != $testCaseStatus){
 			$where[] = "tv.activeFlag = '".$testCaseStatus."'";
-
+		}
+		if(!empty($testCaseVersion)){
+			$where[] = "th.testCaseVersion ='$testCaseVersion'";
+		}
+		if(!empty($testCaseNo)){
+			$where[] = "th.testCaseNo = '$testCaseNo'";
+		}		
 		$where_clause = implode(' AND ', $where);
 		$sqlStr = "SELECT 
 				th.testCaseId,
 				th.testCaseNo,
 				th.testCaseDescription,
 				th.expectedResult,
-				tv.testCaseVersionNumber as testCaseVersion,
+				
+				th.testCaseVersion,
 				CONVERT(nvarchar, tv.effectiveStartDate, 103) as effectiveStartDate,
 				CONVERT(nvarchar, tv.effectiveEndDate, 103) as effectiveEndDate,
 				tv.activeFlag,
@@ -35,7 +42,7 @@ class TestCase_model extends CI_Model{
 			LEFT JOIN M_FN_REQ_HEADER h
 			ON r.functionId = h.functionId
 			WHERE $where_clause
-			ORDER BY th.testCaseNo, tv.testCaseVersionNumber";
+			ORDER BY th.testCaseNo, th.testCaseVersion";
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
 	}
@@ -46,7 +53,7 @@ class TestCase_model extends CI_Model{
 		return $result->row();
 	}
 
-	function searchExistTestCaseDetail($projectId, $testCaseNo = '', $refInputId = ''){
+	function searchExistTestCaseDetail($projectId, $testCaseNo = '',$testCaseversion, $refInputId = ''){
 		if(!empty($projectId)){
 			$where[] = "th.projectId = $projectId";
 		}
@@ -54,7 +61,9 @@ class TestCase_model extends CI_Model{
 		if(!empty($testCaseNo)){
 			$where[] = "th.testCaseNo = '$testCaseNo'";
 		}
-
+		if(!empty($testCaseversion)){
+			$where[] = "td.testCaseversion = $testCaseversion";
+		}
 		if(!empty($refInputId)){
 			$where[] = "td.refdataId = $refdataId";
 		}

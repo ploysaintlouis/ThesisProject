@@ -12,7 +12,7 @@ class RTM_model extends CI_Model{
 		$this->load->model('TestCase_model', 'mTestCase');
 	}
 
-	function searchRTMInfoByCriteria($projectId){
+	function searchRTMInfoByCriteria($projectId,$functionId,$functionVersion){
 		/*$sqlStr = "SELECT 
 				f.functionNo,
 				t.testCaseNo,
@@ -27,6 +27,15 @@ class RTM_model extends CI_Model{
 			ON r.createUser = u.username
 			WHERE r.projectId = '$projectId'
 			AND r.activeFlag = '1'"; */
+			
+			if(!empty($functionVersion)){
+				$where[] = "a.functionVersion = $functionVersion";
+			}
+			if(!empty($functionId)){
+				$where[] = "a.functionId = $functionId";
+			}
+			$where_condition = implode(' AND ', $where);
+
 	$sqlStr = "SELECT 
 					a.testCaseversion,b.testCaseNo,
 					a.functionversion,a.functionId,c.functionNo,
@@ -37,7 +46,8 @@ class RTM_model extends CI_Model{
 					LEFT JOIN M_TESTCASE_HEADER b
 					on a.testCaseId = b.testCaseId
 					where a.projectid = '$projectId'
-					and a.activeFlag = '1' ";
+					and a.activeFlag = '1' 
+					AND $where_condition ";
 
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();

@@ -1205,7 +1205,9 @@ class ChangeManagement extends CI_Controller{
 				'functionDesc' 		=> $value['fnDesc']);
 		}
 		$passData['FRHeader'] = $allFRHeader;
+		$functionVersion_FR = $allFRHeader[$value['functionNo']]['functionVersion'];
 
+		//$passData['FRHeader'][$value['functionNo']]['functionVersion'];
 		//3. All Functional Requirements Detail data
 		$functionNo = '';
 		$frDetailList = $this->mFR->searchFunctionalRequirementDetail($criteria);
@@ -1227,8 +1229,17 @@ class ChangeManagement extends CI_Controller{
 		}
 		$passData['FRDetail'] = $allFRDetail;
 
+		//6. All RTM data
+		//$rtmList = $this->mRTM->searchRTMInfoByCriteria($param->projectId);
+		$rtmList = $this->mRTM->searchRTMInfoByCriteria($param->projectId,$param->functionId,$functionVersion_FR);
+		foreach($rtmList as $value){
+			$allRTM = array('functionId' => $value['functionId'], 'testCaseNo' => $value['testCaseNo'],'testCaseversion' => $value['testCaseversion'],'functionversion' => $value['functionversion']);
+		}
+		$passData['RTM'] = $allRTM;
+		//echo $passData['RTM']['testCaseNo'];
+
 		//4. All Test Case Header data
-		$tcHeaderList = $this->mTestCase->searchTestCaseInfoByCriteria($param->projectId, '1');
+		$tcHeaderList = $this->mTestCase->searchTestCaseInfoByCriteria($param->projectId, '1',$passData['RTM']['testCaseNo'],$passData['RTM']['testCaseversion']);
 		foreach($tcHeaderList as $value){
 			$allTCHeader[$value['testCaseNo']] = array(
 				'testCaseVersion' 	=> $value['testCaseVersion'], 
@@ -1238,21 +1249,15 @@ class ChangeManagement extends CI_Controller{
 		$passData['TCHeader'] = $allTCHeader;
 		
 		//5. All Test Case Detail data
-		$tcDetailList = $this->mTestCase->searchExistTestCaseDetail($param->projectId);
+		$tcDetailList = $this->mTestCase->searchExistTestCaseDetail($param->projectId,$passData['RTM']['testCaseNo'],$passData['RTM']['testCaseversion']);
+		
 		foreach ($tcDetailList as $value) {
 		//	$allTCDetail[$value['testCaseNo']][$value['refInputName']] = $value['testData'];
 			$allTCDetail[$value['testCaseNo']][$value['refdataName']] = $value['testData'];	
 		}
 		$passData['TCDetail'] = $allTCDetail;
 
-		//6. All RTM data
-		$rtmList = $this->mRTM->searchRTMInfoByCriteria($param->projectId);
-		foreach($rtmList as $value){
-			$allRTM = array('functionId' => $value['functionId'], 'testCaseNo' => $value['testCaseNo'],'testCaseversion' => $value['testCaseversion'],'functionversion' => $value['functionversion']);
-		}
-		$passData['RTM'] = $allRTM;
 
-			//echo $passData['RTM']['testCaseNo'];
 		//7. Change Request Information
 		$modifyFlag = EDIT_FLAG_ENABLE;
 
