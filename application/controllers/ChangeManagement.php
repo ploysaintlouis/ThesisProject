@@ -138,8 +138,11 @@ class ChangeManagement extends CI_Controller{
 			/** 3.Control Version*/
 			/** 4.Save Change Request */
 			/** 5.Save Change History */
+			//echo $changeResult;
+			//echo $projectId;
+			
 			if(null != $changeResult && !empty($changeResult)){
-				if('Y' == $changeResult->result->isSuccess){
+				//if('Y' == $changeResult->result->isSuccess){
 					$user = $this->session->userdata('username');
 					$staffflag = $this->session->userdata('staffflag');
 
@@ -166,9 +169,9 @@ class ChangeManagement extends CI_Controller{
 						$this->displayChangeResult($changeRequestNo);
 						return false;
 					}
-				}else{
-					$error_message = $changeResult->result->error_message;
-				}
+				//}else{
+				//	$error_message = $changeResult->result->error_message;
+				//}
 			}else{
 				$errorFlag = true;
 				$error_message = str_replace("{0}", "Request Web Service", ER_MSG_016);
@@ -1298,7 +1301,11 @@ class ChangeManagement extends CI_Controller{
 		$url = 'http://localhost:81/Stubservice/ChangeAPI.php';
 
 		$json = $this->common->postCURL($url, $passData);
-		echo $json;
+		//echo $json;
+		$json = json_decode($json);
+		
+		//var_dump($json);
+
 		$this->writeJsonFile($passData, $json, $param->functionId);
 
 		return $json;

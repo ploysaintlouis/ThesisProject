@@ -147,7 +147,14 @@ class TestCase_model extends CI_Model{
 		}
 		return null;
 	}
+function searchFRMAXTCNo() {
 
+		$strsql = " SELECT max(testCaseNo) AS Max_TCNO 
+					FROM M_TESTCASE_HEADER ";
+
+   $result = $this->db->query($strsql);
+   return  $result->row();
+} 
 	function insertTestCaseDetail($param, $user){
 		$currentDateTime = date('Y-m-d H:i:s');
 		
@@ -166,7 +173,11 @@ class TestCase_model extends CI_Model{
 		$previousVersionId = !empty($param->previousVersionId)? $param->previousVersionId : "NULL";
 		/*$sqlStr = "INSERT INTO M_TESTCASE_VERSION (testCaseId, testCaseVersionNumber, effectiveStartDate, effectiveEndDate, previousVersionId, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseId}', '{$param->initialVersionNo}', '{$param->effectiveStartDate}', NULL, $previousVersionId, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
 		*/
-		$sqlStr = "INSERT INTO M_TESTCASE_VERSION (testCaseVersionNumber,testCaseVersion, effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate, updateUser) VALUES ('{$param->testCaseNo}', '{$param->initialVersionNo}', '{$param->effectiveStartDate}', NULL, '{$param->activeStatus}', '{$currentDateTime}', '$user', '{$currentDateTime}', '$user')";
+		$sqlStr = "INSERT INTO M_TESTCASE_VERSION (testCaseVersionNumber,testCaseVersion, 
+		effectiveStartDate, effectiveEndDate, activeFlag, createDate, createUser, updateDate,
+		 updateUser) VALUES ('{$param->testCaseNo}', '{$param->initialVersionNo}', 
+		 '{$param->effectiveStartDate}', NULL, '{$param->activeStatus}', '{$currentDateTime}', 
+		 '$user', '{$currentDateTime}', '$user')";
 		$result = $this->db->query($sqlStr);
 		return $result;
 	}
@@ -180,7 +191,7 @@ class TestCase_model extends CI_Model{
 				updateDate = '$param->updateDate', 
 				updateUser = '$param->updateUser'  
 			WHERE testCaseId = $param->testCaseId 
-			AND testCaseVersionId = $param->testCaseVersionId 
+			AND testCaseVersion = $param->testCaseVersionId 
 			AND updateDate = '$param->updateDateCondition'";
 		$result = $this->db->query($sqlStr);
 		return $this->db->affected_rows();	

@@ -224,11 +224,11 @@ class DatabaseSchema_model extends CI_Model{
 
 	function getSchemaFromDatabaseTarget($connectionDB, $tableName, $columnName){
 		$dbSchemaDetail = array();
-
-		$serverName = $connectionDB->hostname;
-		$uid = $connectionDB->username;
-		$pwd = $connectionDB->password;
-		$databaseName = $connectionDB->databaseName;
+//echo $serverName ;
+		$serverName = 'DESKTOP-71LOP0E\SQLEXPRESS';
+		$uid = 'sa';
+		$pwd = "password";
+		$databaseName = 'Target';
 
 		$connectionInfo = array( "UID" => $uid, "PWD" => $pwd, "Database" => $databaseName); 
 

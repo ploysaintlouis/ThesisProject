@@ -54,6 +54,7 @@ class Common {
 		
 		//curl_exec($curlResource);
 		$output = curl_exec($ch);
+		//echo $output;
 		curl_error($ch);
         curl_close($ch);
         return $output;

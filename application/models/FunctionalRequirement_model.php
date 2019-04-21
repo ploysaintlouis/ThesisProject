@@ -92,7 +92,8 @@ class FunctionalRequirement_model extends CI_Model {
 			createDate,createUser,updateDate,activeFlag 
 			FROM M_FN_REQ_DETAIL i
 			WHERE i.projectId = $projectId
-			AND i.dataName = '$dataName' 
+			AND i.dataName = '$dataName'
+			AND i.functionId =
 			AND ($activeFlag is null or i.activeFlag = $activeFlag)
 			ORDER BY i.createDate desc";
 		$result = $this->db->query($queryStr);
@@ -415,8 +416,17 @@ class FunctionalRequirement_model extends CI_Model {
 	function insertFRHeader($param){
 		$currentDateTime = date('Y-m-d H:i:s');
 	/*	$sqlStr = "INSERT INTO M_FN_REQ_HEADER (functionNo, functionDescription, projectId, createDate, createUser, updateDate, updateUser) VALUES ('{$param->functionNo}', '{$param->functionDescription}', {$param->projectId}, '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}')";*/
-		$sqlStr = "INSERT INTO M_FN_REQ_HEADER (functionNo, functionDescription, projectId, createDate, createUser, updateDate, updateUser,functionversion,activeflag) 
-		VALUES ('{$param->functionNo}', '{$param->functionDescription}', {$param->projectId}, '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}','1','1')";
+	if($param->functionVersionNo == null){
+		$sqlStr = "INSERT INTO M_FN_REQ_HEADER (functionNo, functionDescription, projectId, 
+		createDate, createUser, updateDate, updateUser,functionversion,activeflag) 
+		VALUES ('{$param->functionNo}', '{$param->functionDescription}', {$param->projectId}, 
+		'$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}','1','1')";
+	}else{
+$sqlStr = "INSERT INTO M_FN_REQ_HEADER (functionNo, functionDescription, projectId, 
+createDate, createUser, updateDate, updateUser,functionversion,activeflag) 
+VALUES ('{$param->functionNo}', '{$param->functionDescription}', {$param->projectId}, 
+'$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}','{$param->functionVersionNo}','{$param->activeFlag}')";
+	}
 		$result = $this->db->query($sqlStr);
 		if($result){
 			$query = $this->db->query("SELECT IDENT_CURRENT('M_FN_REQ_HEADER') as last_id");
@@ -446,7 +456,7 @@ class FunctionalRequirement_model extends CI_Model {
 		$currentDateTime = date('Y-m-d H:i:s');
 		/*$sqlStr = "INSERT INTO M_FN_REQ_INPUT (projectId, inputName, refTableName, refColumnName, createDate, createUser, updateDate, updateUser) VALUES ({$param->projectId}, '{$param->inputName}', '{$param->referTableName}', '{$param->referColumnName}', '$currentDateTime', '{$param->user}', '$currentDateTime', '{$param->user}')";
 		*/
-		if ($param->schemaVersionId != null ) {
+		if ($param->referTableName !=null) {
 				$sqlStr = " INSERT INTO M_FN_REQ_DETAIL (projectId,typeData,dataName,refTableName,refColumnName,
 		 createDate,createUser,updateDate,updateUser,functionId,functionNo,schemaVersionId,dataType,
 		 effectiveStartDate,effectiveEndDate,activeFlag,functionVersion,
@@ -492,14 +502,24 @@ class FunctionalRequirement_model extends CI_Model {
 				activeFlag = '$param->activeFlag', 
 				updateDate = '$param->currentDate', 
 				updateUser = '$param->user' 
-			WHERE functionVersionId = $param->oldFunctionVersionId 
-			AND functionId = $param->functionId 
+			WHERE functionId = $param->functionId 
 			AND updateDate = '$param->oldUpdateDate'";
 
 		$result = $this->db->query($sqlstr);
 		return $this->db->affected_rows();
 	}
+	function updateFunctionalRequirementsNo($param){
+		$effectiveEndDate = !empty($param->effectiveEndDate)? "'".$param->effectiveEndDate."'": "NULL";
 
+		$sqlstr = "UPDATE M_FN_REQ_HEADER 
+			SET activeFlag = '$param->activeFlag', 
+				updateDate = '$param->currentDate', 
+				updateUser = '$param->user' 
+			WHERE functionId = '$param->functionId'";
+//echo $sqlstr;
+		$result = $this->db->query($sqlstr);
+		return $this->db->affected_rows();
+	}
 	function updateStatusFRInput($param){
 		$sqlStr = "UPDATE M_FN_REQ_INPUT
 			SET activeFlag = '$param->activeFlag',
@@ -532,13 +552,14 @@ class FunctionalRequirement_model extends CI_Model {
 		}
 		$where_condition = implode(" AND ", $where);
 
-		$sqlStr = "UPDATE M_FN_REQ_DETAIL_INPUT
+		//$sqlStr = "UPDATE M_FN_REQ_DETAIL_INPUT
+		$sqlStr = "UPDATE M_FN_REQ_DETAIL
 			SET effectiveEndDate = $effectiveEndDate,
 				activeFlag = '$param->activeFlag',
 				updateDate = '$param->currentDate',
 				updateUser = '$param->user'
 			WHERE $where_condition";
-		
+	//	echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $this->db->affected_rows();
 	}

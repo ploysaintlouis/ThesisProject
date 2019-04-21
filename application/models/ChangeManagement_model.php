@@ -46,7 +46,7 @@ class ChangeManagement_model extends CI_Model{
 		}
 		*/
 		if(!empty($param->dataName)){
-			$where[] = "((dataName = '$param->dataName'))";
+			$where[] = "dataName = '$param->dataName'";
 		}
 		$where_clause = implode(' AND ', $where);
 
@@ -54,9 +54,40 @@ class ChangeManagement_model extends CI_Model{
 			FROM T_TEMP_CHANGE_LIST
 			WHERE $where_clause
 			ORDER BY lineNumber";
-			//echo $sqlStr;
+		//	echo $sqlStr;
 		$result = $this->db->query($sqlStr);
 		return $result->result_array();
+	}
+
+	function searchFRInputChangeList($param){
+		if(!empty($param->userId)){
+			$where[] = "userId = '$param->userId'";
+		}
+		if(!empty($param->functionId)){
+			$where[] = "functionId = '$param->functionId'";
+		}
+		if(!empty($param->functionVersion)){
+			$where[] = "functionVersion = '$param->functionVersion'";
+		}
+		if(!empty($param->dataId)){
+			$where[] = "dataId = $param->dataId";
+		}
+
+		if(!empty($param->schemaVersionId)){
+			$where[] = "schemaVersionId = $param->schemaVersionId";
+		}
+		if(!empty($param->dataName)){
+			$where[] = "dataName = '$param->dataName'";
+		}
+		$where_clause = implode(' AND ', $where);
+
+		$sqlStr = "SELECT *
+			FROM T_TEMP_CHANGE_LIST
+			WHERE $where_clause
+			ORDER BY lineNumber";
+			echo $sqlStr;
+		$result = $this->db->query($sqlStr);
+		return $result->row();
 	}
 
 	function searchChangeRequestList(){
@@ -284,24 +315,55 @@ echo $sqlStr;
 	}
 
 	function getLastFunctionalRequirementVersion($functionId){
-		$sqlStr = "SELECT functionVersionId, functionVersionNumber, updateDate
+		/*$sqlStr = "SELECT functionVersionId, functionVersionNumber, updateDate
 			FROM M_FN_REQ_VERSION
 			WHERE functionId = $functionId
 			AND activeFlag = '1'";
+*/
+		$sqlStr = "SELECT functionId, functionVersionNumber, updateDate
+		FROM M_FN_REQ_VERSION
+		WHERE functionId = $functionId
+		AND activeFlag = '1'";
 
 		$result = $this->db->query($sqlStr);
 		return $result->row();
 	}
+	function getFunctionalRequirementNo($functionId){
+		/*$sqlStr = "SELECT functionVersionId, functionVersionNumber, updateDate
+			FROM M_FN_REQ_VERSION
+			WHERE functionId = $functionId
+			AND activeFlag = '1'";
+*/
+		$sqlStr = "SELECT functionId, functionNo, updateDate
+		FROM M_FN_REQ_HEADER
+		WHERE functionId = $functionId
+		AND activeFlag = '1'";
 
+		$result = $this->db->query($sqlStr);
+		return $result->row();
+	}
+	function getLastFunctionalRequirementNo($functionId){
+		/*$sqlStr = "SELECT functionVersionId, functionVersionNumber, updateDate
+			FROM M_FN_REQ_VERSION
+			WHERE functionId = $functionId
+			AND activeFlag = '1'";
+*/
+		$sqlStr = "SELECT Max(functionNo) AS functionNo
+		FROM M_FN_REQ_HEADER
+		WHERE activeFlag = '1'";
+
+		$result = $this->db->query($sqlStr);
+		return $result->row();
+	}	
 	function getLastTestCaseVersion($projectId, $testCaseNo, $testCaseVersionNo){
-		$sqlStr = "SELECT h.testCaseId, v.testCaseVersionId, v.testCaseVersionNumber, v.updateDate
+		$sqlStr = "SELECT h.testCaseId,v.testCaseVersion,v.testCaseVersionNumber, v.updateDate
 			FROM M_TESTCASE_HEADER h
 			INNER JOIN M_TESTCASE_VERSION v
 			ON h.testCaseId = v.testCaseId
 			WHERE v.activeFlag = '1'
 			AND h.projectId = $projectId
 			AND h.testCaseNo = '$testCaseNo'
-			AND v.testCaseVersionNumber = $testCaseVersionNo";
+			AND v.testCaseVersion = $testCaseVersionNo";
 		$result = $this->db->query($sqlStr);	
 		return $result->row();
 	}
@@ -576,7 +638,7 @@ echo $sqlStr;
 		if(!$errorFlag){
 		foreach($affectedRequirements as $keyFunctionNo => $functionInfoVal){
 			$keyFunctionId = '';
-
+//echo $keyFunctionId;
 			$existFR = $this->mFR->searchExistFunctionalRequirement($keyFunctionNo, $affectedProjectId);
 
 			if(null != $existFR && !empty($existFR)){
@@ -590,6 +652,11 @@ echo $sqlStr;
 			//3.1 get latest function version id
 			$oldFnVersionNumber = $functionInfoVal->functionVersion;
 			$resultLastFRInfo = $this->getLastFunctionalRequirementVersion($oldFunctionId, $oldFnVersionNumber);
+			if($value->changeType = 'add'){
+				$resultLastFRNo = $this->getLastFunctionalRequirementNo($oldFunctionId, $oldFnVersionNumber);
+			}else{
+				$resultLastFRNo = $this->getFunctionalRequirementNo($oldFunctionId, $oldFnVersionNumber);
+			}
 
 			if(null == $resultLastFRInfo || 0 == count($resultLastFRInfo)){
 				$errorFlag = true;
@@ -597,12 +664,17 @@ echo $sqlStr;
 				break;
 			}
 
-			$oldFRVersionId = $resultLastFRInfo->functionVersionId;
+			//$oldFRVersionId = $resultLastFRInfo->functionVersionId;
+			$oldFRVersionId = $resultLastFRInfo->functionId;
 			$oldFRVersionUpdateDate = $resultLastFRInfo->updateDate;
 			$newFRVersionNumber = (int)$resultLastFRInfo->functionVersionNumber + 1;
-
+			if($value->changeType = 'add'){
+				$newFRNo = substr($resultLastFRNo->functionNo,0,7).(substr($resultLastFRNo->functionNo,7,7)+1);
+			}else{
+				$newFRNo = $resultLastFRNo->functionNo;
+			}
 			//3.1.1 Create new version of function
-			$param = (object) array(
+	/*		$param = (object) array(
 				'functionId' => $oldFunctionId,
 				'functionVersionNo' => $newFRVersionNumber,
 				'effectiveStartDate' => $newCurrentDate,
@@ -626,28 +698,64 @@ echo $sqlStr;
 				$error_message = str_replace("{0}", "Functional Requirements", ER_MSG_016);
 				break;
 			}
+*/
+			$param = (object) array(
+				'functionId' => $oldFunctionId,
+				'functionVersionNo' => $newFRVersionNumber,
+				'effectiveStartDate' => $newCurrentDate,
+				'effectiveEndDate' => '',
+				'functionDescription' =>'',
+				'activeFlag' => ACTIVE_CODE,
+				'previousVersionId' => $oldFRVersionId,
+				'currentDate' => $newCurrentDate,
+				'user' => $user,
+				'functionNo' => $newFRNo,
+				'projectId' => $affectedProjectId);
+			//$newFRVersionId = $this->mFR->insertFRVersion($param);
+			$newFRVersionId = $this->mFR->insertFRHeader($param);
+		//echo $newFRVersionId;
+			//3.1.2 Update disabled previous version
+			$param->effectiveEndDate = $newCurrentDate;
+			$param->activeFlag = UNACTIVE_CODE;
+			//condition
+			$param->oldFunctionVersionId = $oldFRVersionId;
+			$param->oldUpdateDate = $oldFRVersionUpdateDate;
 
+			//$rowUpdate = $this->mFR->updateFunctionalRequirementsVersion($param);
+			$rowUpdate = $this->mFR->updateFunctionalRequirementsNo($param);
+
+			if(0 == $rowUpdate){
+				$errorFlag = true;
+				$error_message = str_replace("{0}", "Functional Requirements", ER_MSG_016);
+				break;
+			}
 			//3.2 Create new input of FR information
-			foreach($functionInfoVal->functionInput as $keyInputName => $value){
-
+		//echo $functionInfoVal->functionData;
+		foreach($functionInfoVal->functionData as $keyInputName => $value){
+			//echo $keyInputName;
+/*echo $keyInputName;
 				$resultExistInput = $this->mFR->searchFRInputInformation($affectedProjectId, $keyInputName, ACTIVE_CODE);
-				//var_dump($affectedProjectId."|".$keyInputName);
-				//var_dump($resultExistInput);
+				var_dump($affectedProjectId."|".$keyInputName);
+				var_dump($resultExistInput);
+
 
 				if(null == $resultExistInput || 0 == count($resultExistInput)){
 					//insert new input (case: never has input before)
-					$paramFRInput = (object) array(
+					$paramFRData = (object) array(
 						'projectId' => $affectedProjectId,
 					//	'inputName' => $keyInputName,
 						'typeData' => $value->typeData,
-						'dataName' => $keydataName,
-						'referTableName' => $value->refTableName,
-						'referColumnName' => $value->refColumnName,
-						'user' => $user);
-					$resultInputId = $this->mFR->insertFRInput($paramFRInput);
-					$inputId = $resultInputId;
+						'dataName' => $keyInputName,
+						'referTableName' => $value->tableName,
+						'referColumnName' => $value->columnName,
+						'user' => $user,
+						'functionNo' => $newFRNo,
+						'dataType'=>$value->dataType);
+					$resultDataId = $this->mFR->insertFRInput($newFRVersionId,$paramFRData);
+					$dataId = $resultDataId;
 				}else{
-					$inputId = $resultExistInput->inputId;
+					//$inputId = $resultExistInput->inputId;
+					$dataId = $resultExistInput->dataId;
 
 					$paramFRInputCondition = (object) array(
 						'functionId' => $oldFunctionId,
@@ -658,18 +766,22 @@ echo $sqlStr;
 						$oldSchemaVersionId = $resultFRInput[0]['schemaVersionId'];
 					}
 				}
-
+*/
 				if("add" == $value->changeType || "edit" == $value->changeType){
 
 					//find latest version of reference schema that related with function's input
-					$resultSchemaInfo = $this->mDB->searchExistDatabaseSchemaInfo($value->refTableName, $value->refColumnName, $affectedProjectId);
-
-					$schemaVersionId = $resultSchemaInfo->schemaVersionId;
-
+					//$resultSchemaInfo = $this->mDB->searchExistDatabaseSchemaInfo($value->refTableName, $value->refColumnName, $affectedProjectId);
+					if (null != $value->tableName){
+						$resultSchemaInfo = $this->mDB->searchExistDatabaseSchemaInfo($value->tableName, $value->columnName, $affectedProjectId);
+						$schemaVersionId = $resultSchemaInfo->schemaVersionId;
+					}else{
+						$schemaVersionId = null;
+					}	
 					//Check exist InputId and SchemaVersionId
 					$criteria = (object) array(
 						'functionId' 	  => $oldFunctionId,
-						'inputId' 	 	  => $inputId, 
+						//'dataId' 	 	  => $dataId, 
+						'dataName'			=> $keyInputName,
 						'schemaVersionId' => $schemaVersionId);
 					$resultFRInputDetail = $this->mFR->searchExistFRInputInFunctionalRequirement($criteria);
 					if(null != $resultFRInputDetail && 0 < count($resultFRInputDetail)){
@@ -679,7 +791,7 @@ echo $sqlStr;
 							'activeFlag' => ACTIVE_CODE,
 							'currentDate' => $newCurrentDate,
 							'effectiveEndDate' => '',
-							'inputId' => $inputId,
+						//	'dataId' => $dataId,
 							'functionId' => $oldFunctionId,
 							'oldSchemaVersionId' => $oldSchemaVersionId);
 						$resultUpdate = $this->mFR->updateFunctionalRequirementsDetail($paramFRDetail);
@@ -689,16 +801,42 @@ echo $sqlStr;
 							break 2;
 						}
 					}else{
+						//echo $keyInputName;
+						//echo $oldFRVersionId;
+						$paramSearch = (object) array(
+							'functionId' => $oldFunctionId,
+							'functionVersion' => $oldFnVersionNumber,
+							'dataName' =>$keyInputName
+							);
+						$ChangeList = $this->searchFRInputChangeList($paramSearch);				
+						//echo $tmpChangeList->newDataType;
 						//insert new version input detail
 						$paramFRDetail = (object) array(
-							'inputId' => $inputId,
+							//'dataId' => $dataId,
+							'projectId' =>$affectedProjectId,
+							'functionNo'=>$newFRNo,
+							'dataName'			=> $keyInputName,
 							'schemaVersionId' => $schemaVersionId,
 							'effectiveStartDate' => $newCurrentDate,
 							'effectiveEndDate' => '',
 							'activeFlag' => ACTIVE_CODE,
-							'user' => $user);
+							'user' => $user,
+							'typeData'=>$ChangeList->typeData,
+							'schemaVersionId' => $ChangeList->schemaVersionId,
+							'dataType'=>$ChangeList->newDataType,
+							'dataLength'=>$ChangeList->newDataLength,
+							'decimalPoint'=>$ChangeList->newScaleLength,
+							'constraintPrimaryKey'=>'',
+							'constraintUnique'=>$ChangeList->newUnique,
+							'constraintDefault'=>$ChangeList->newDefaultValue,
+							'constraintNull'=>$ChangeList->newNotNull,
+							'constraintMinValue'=>$ChangeList->newMinValue,
+							'constraintMaxValue'=>$ChangeList->newMaxValue,
+							'referTableName'=>$ChangeList->tableName,
+							'referColumnName'=>$ChangeList->columnName);
 						//insertFRDetail
-						$resultInsert = $this->mFR->insertFRDetail($oldFunctionId, $paramFRDetail);
+						//$resultInsert = $this->mFR->insertFRDetail($oldFunctionId, $paramFRDetail);
+						$resultInsert = $this->mFR->insertFRInput($oldFunctionId, $paramFRDetail);
 					}
 				}
 
@@ -710,7 +848,7 @@ echo $sqlStr;
 						'currentDate' => $newCurrentDate,
 						'effectiveEndDate' => $newCurrentDate,
 						'functionId' => $oldFunctionId,
-						'inputId' => $inputId,
+						'dataId' => $dataId,
 						'oldSchemaVersionId' => $oldSchemaVersionId);
 					$resultUpdate = $this->mFR->updateFunctionalRequirementsDetail($paramFRDetail);
 					if(0 == $resultUpdate){
@@ -754,7 +892,8 @@ echo $sqlStr;
 				}
 
 				$testCaseId = $resultLastTCVersion->testCaseId;
-				$oldTCVersionId = $resultLastTCVersion->testCaseVersionId;
+				//$oldTCVersionId = $resultLastTCVersion->testCaseVersionId;
+				$oldTCVersionId = $resultLastTCVersion->testCaseVersion;
 				$oldTCVersionNumber = (int)$resultLastTCVersion->testCaseVersionNumber;
 				$newTCVersionNumber = $oldTCVersionNumber + 1;
 				$oldUpdateDate = $resultLastTCVersion->updateDate;
@@ -767,7 +906,9 @@ echo $sqlStr;
 			}else{
 				$testcaseInfoVal->newVerNO = '';
 			}
-			
+			$New_TCNo = $this->mTestCase->searchFRMAXTCNo();
+			//echo $New_TCNo->Max_TCNO;
+
 			//Insert Test Case Version.
 			if(CHANGE_TYPE_ADD == $testcaseInfoVal->changeType 
 				|| CHANGE_TYPE_EDIT == $testcaseInfoVal->changeType){
@@ -777,7 +918,8 @@ echo $sqlStr;
 					'initialVersionNo' 	 => $newTCVersionNumber,
 					'effectiveStartDate' => $newCurrentDate,
 					'previousVersionId'  => $oldTCVersionId,
-					'activeStatus' 		 => ACTIVE_CODE);
+					'activeStatus' 		 => ACTIVE_CODE,
+					'testCaseNo'		=> $New_TCNo->Max_TCNO);
 				$result = $this->mTestCase->insertTestCaseVersion($paramInsert, $user);
 			}
 			
@@ -801,8 +943,9 @@ echo $sqlStr;
 			}
 
 			//Insert or Update Test Case Detail
+			//echo  $testcaseInfoVal->testCaseDetails;
 			foreach($testcaseInfoVal->testCaseDetails as $keyInputName => $value){
-
+echo $keyInputName;
 				$resultInputInfo = $this->mFR->searchFRInputInformation($affectedProjectId, $keyInputName, ACTIVE_CODE);
 				if(null == $resultInputInfo || 0 == count($resultInputInfo)){
 					$errorFlag = true;
@@ -1064,7 +1207,7 @@ echo $sqlStr;
 
 			//3.1 save change history requirement detail
 			$i = 1;
-			foreach($functionDetailValue->functionInput as $keyInputName => $value){
+			foreach($functionDetailValue->functionData as $keyInputName => $value){
 
 				$paramInsert = (object) array(
 				'fnReqHistoryId' 	 => $fnReqHistoryId,
